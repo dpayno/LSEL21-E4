@@ -47,7 +47,7 @@ class FsmGps(object):
         return self.flag_active
 
     def is_not_active(self):
-        return (not self.flag_active)
+        return not self.flag_active
 
     def find_car(self):
         return self.flag_find_car
@@ -82,14 +82,11 @@ mi_fsm = FsmGps("mi_fsm")
 #mi_fsm.machine.get_graph().draw('fsm_gps.png', prog='dot') 
 
 # Inicializar la maquina de estados
-print(mi_fsm.state)
 mi_fsm.start()
-print(mi_fsm.state)
 
-mi_fsm.flag_active = 1
-mi_fsm.fire()
-print(mi_fsm.state)
-
-mi_fsm.flag_find_car = 1
-mi_fsm.fire()
-print(mi_fsm.state)
+while True:
+    print("Estado: ", mi_fsm.state)
+    mi_fsm.flag_active = int(input("Enter flag_active: "))
+    mi_fsm.flag_find_car = int(input("Enter flag_find_car: "))
+    mi_fsm.flag_init_gps_record = int(input("Enter flag_init_gps_record: "))
+    mi_fsm.fire()
