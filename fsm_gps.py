@@ -1,37 +1,37 @@
+
 from transitions.extensions import GraphMachine as Machine
 from datetime import datetime as dt
 
-#import os
-#os.environ["PATH"] += os.pathsep + 'C:/Users/payno/anaconda3/Lib/site-packages/'
-
+""" This class is the implementation of the GPS FSM behaviour.
+"""
 class FsmGps(object):
+    """ FSM states
+    """
     states = ['init', 'OFF', 'ON', 'ASSAULT']
+
+    """ Default timeout for GPS frame sending
+    """
     TIMEOUT_DEFAULT = 300
 
     def __init__(self, name):
-
         self.name = name
 
-        # Flag active
+        """ Input shared variables 
+        """
+        self.flag_active = 0 # Flag find car
+        self.flag_find_car = 0 # Flag find car
+        self.flag_init_gps_record = 0 # Flag init GPS record
 
-        self.flag_active = 0
-        
-        # Flag find car
-
-        self.flag_find_car = 0
-
-        # Flag init GPS record
-
-        self.flag_init_gps_record = 0
-
-        # Timeout GPS
+        """ Timeout GPS
+        """
         self.timeout_gps = 0
 
-        # Initialize the state machine
-
+        """ Initialize the state machine
+        """
         self.machine = Machine(model=self, states=FsmGps.states, initial='init')
 
-        # Add transitions
+        """ Add transitions
+        """
         self.machine.add_transition(trigger='start', source='init', dest='OFF')
         self.machine.add_transition('fire', 'OFF', 'ON', conditions=['is_active'])
         self.machine.add_transition('fire', 'ON', 'OFF', conditions=['is_not_active'])
@@ -41,8 +41,8 @@ class FsmGps(object):
         self.machine.add_transition('fire', 'ASSAULT', 'ASSAULT', conditions=['timeout_or_find_car'], after='send_gps_frame_and_init_timer')
         self.machine.add_transition('fire', 'ASSAULT', 'OFF', conditions=['is_not_active'])
 
-    # Funciones de guarda 
-
+    """ Guard functions
+    """ 
     def is_active(self):
         return self.flag_active
 
@@ -53,16 +53,17 @@ class FsmGps(object):
         return self.flag_find_car
 
     def assault_and_not_find_car(self):
-        return (self.flag_init_gps_record and (not flag_find_car))
+        return self.flag_init_gps_record and (not flag_find_car)
 
     def not_assault(self):
-        return (not self.flag_init_gps_record)
+        return not self.flag_init_gps_record
 
     def timeout_or_find_car(self):
-        return ((int(dt.now().timestamp()) > self.timeout_gps) or self.flag_find_car)
+        return (int(dt.now().timestamp()) > self.timeout_gps) or self.flag_find_car
 
-    # Funciones de salida
-
+    """ Output functions
+    TODO: Modify GPS frame sending with GPS drivers
+    """ 
     def send_gps_frame(self):
         print("Se ha enviado un nuevo frame GPS")
 
@@ -75,18 +76,18 @@ class FsmGps(object):
         self.timeout_gps = int(dt.now().timestamp()) + TIMEOUT_DEFAULT
 
 
-# Crear la maquina de estados
-mi_fsm = FsmGps("mi_fsm")
+""" Main function. Creates and inits a Gps FSM
+"""
+def main():
+    mi_fsm = FsmGps("mi_fsm") # Create FSM
+    # mi_fsm.machine.get_graph().draw('fsm_gps.png', prog='dot') 
+    mi_fsm.start() # Init state
+    while True:
+        print("Estado: ", mi_fsm.state)
+        mi_fsm.flag_active = int(input("Enter flag_active: "))
+        mi_fsm.flag_find_car = int(input("Enter flag_find_car: "))
+        mi_fsm.flag_init_gps_record = int(input("Enter flag_init_gps_record: "))
+        mi_fsm.fire()
 
-# Comando para pintar el diagrama de estados
-#mi_fsm.machine.get_graph().draw('fsm_gps.png', prog='dot') 
-
-# Inicializar la maquina de estados
-mi_fsm.start()
-
-while True:
-    print("Estado: ", mi_fsm.state)
-    mi_fsm.flag_active = int(input("Enter flag_active: "))
-    mi_fsm.flag_find_car = int(input("Enter flag_find_car: "))
-    mi_fsm.flag_init_gps_record = int(input("Enter flag_init_gps_record: "))
-    mi_fsm.fire()
+if __name__ == "__main__":
+    main()
