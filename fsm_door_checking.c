@@ -1,4 +1,5 @@
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "fsm.h"
 #include "fsm_door_checking.h"
 
