@@ -67,6 +67,31 @@ class TestStringMethods(unittest.TestCase):
 		self.assertEqual(mi_fsm.state, 'OFF') # Comprobamos que si se desactiva flag_init_gps_record por error, seguimos en assault
 
 
+	'''TEST TRANSITION ASAULT/OFF'''
+	def test_fsm_gps_checkTransitionAsaultOffOnlyWhenNotActive(self):
+		mi_fsm = FsmGps("mi_fsm")
+		mi_fsm.start()
+		mi_fsm.state = 'ASSAULT'
+		mi_fsm.flag_active = 1
+		mi_fsm.flag_find_car = 0
+		mi_fsm.flag_init_gps_record = 0
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'ASSAULT') # Comprobamos que si se desactiva flag_init_gps_record por error, seguimos en assault
+
+		mi_fsm.state = 'ASSAULT'
+		mi_fsm.flag_active = 0
+		mi_fsm.flag_find_car = 1
+		mi_fsm.flag_init_gps_record = 0
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'OFF') # Comprobamos que si se desactiva active pasa a OFF (aunque siga activo el flag de gps_record)
+
+		mi_fsm.state = 'ASSAULT'
+		mi_fsm.flag_active = 0
+		mi_fsm.flag_find_car = 0
+		mi_fsm.flag_init_gps_record = 1
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'OFF') # Comprobamos que si se desactiva active pasa a OFF (aunque siga activo el flag de gps_record)
+
 
 if __name__ == '__main__':
     unittest.main()
