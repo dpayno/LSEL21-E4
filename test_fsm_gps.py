@@ -21,7 +21,7 @@ class TestStringMethods(unittest.TestCase):
 
 
 	"""TEST TRANSITION ON/ON"""
-	def test_fsm_gps_checkTransitionOnOnIfIsActiveAndLocationRequestAndNoAsault(self):
+	def test_fsm_gps_checkTransitionOnOnIfIsActiveAndLocationRequestAndNoAssault(self):
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
 		mi_fsm.state = 'ON'
@@ -30,6 +30,18 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.flag_init_gps_record = 0
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'ON')
+
+	'''TEST TRANSITION ON/ASSAULT (sin location request)'''
+	def test_fsm_gps_checkTransitionOnAssaultIfIsActiveAndAssaultAndNoLocationRequest(self):
+		mi_fsm = FsmGps("mi_fsm")
+		mi_fsm.start()
+		mi_fsm.state = 'ON'
+		mi_fsm.flag_active = 1
+		mi_fsm.flag_find_car = 0
+		mi_fsm.flag_init_gps_record = 1
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'ASSAULT')
+
 
 
 
