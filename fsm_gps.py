@@ -35,9 +35,8 @@ class FsmGps(object):
         self.machine.add_transition(trigger='start', source='init', dest='OFF')
         self.machine.add_transition('fire', 'OFF', 'ON', conditions=['is_active'])
         self.machine.add_transition('fire', 'ON', 'OFF', conditions=['is_not_active'])
-        self.machine.add_transition('fire', 'ON', 'ON', conditions=['find_car_and_not_assault'], after='send_gps_frame')
+        self.machine.add_transition('fire', 'ON', 'ON', conditions=['find_car_and_not_assault_and_active'], after='send_gps_frame')
         self.machine.add_transition('fire', 'ON', 'ASSAULT', conditions=['assault'], after='init_timer_gps')
-        self.machine.add_transition('fire', 'ASSAULT', 'ON', conditions=['not_assault'])
         self.machine.add_transition('fire', 'ASSAULT', 'ASSAULT', conditions=['timeout_or_find_car'], after='send_gps_frame_and_init_timer')
         self.machine.add_transition('fire', 'ASSAULT', 'OFF', conditions=['is_not_active'])
 
@@ -49,14 +48,11 @@ class FsmGps(object):
     def is_not_active(self):
         return not self.flag_active
 
-    def find_car_and_not_assault(self):
-        return (self.flag_find_car and (not self.flag_init_gps_record))
+    def find_car_and_not_assault_and_active(self):
+        return (self.flag_find_car and (not self.flag_init_gps_record) and self.flag_active)
 
     def assault(self):
         return self.flag_init_gps_record
-
-    def not_assault(self):
-        return not self.flag_init_gps_record
 
     def timeout_or_find_car(self):
         return (int(dt.now().timestamp()) > self.timeout_gps) or self.flag_find_car
