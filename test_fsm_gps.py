@@ -31,6 +31,7 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'ON')
 
+
 	'''TEST TRANSITION ON/ASSAULT (sin location request)'''
 	def test_fsm_gps_checkTransitionOnAssaultIfIsActiveAndAssaultAndNoLocationRequest(self):
 		mi_fsm = FsmGps("mi_fsm")
@@ -53,6 +54,17 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'ASSAULT')
 
+
+		'''TEST TRANSITION ON/OFF'''
+	def test_fsm_gps_checkTransitionOnOffWhenNotActive(self):
+		mi_fsm = FsmGps("mi_fsm")
+		mi_fsm.start()
+		mi_fsm.state = 'ON'
+		mi_fsm.flag_active = 0
+		mi_fsm.flag_find_car = 1
+		mi_fsm.flag_init_gps_record = 1
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'OFF') # Comprobamos que si se desactiva flag_init_gps_record por error, seguimos en assault
 
 
 
