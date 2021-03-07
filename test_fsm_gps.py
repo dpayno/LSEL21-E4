@@ -4,10 +4,12 @@ from fsm_gps import FsmGps
 
 class TestStringMethods(unittest.TestCase):
 
-	def test_init_stateEqualToOff(self):
+	def test_fsm_gps_initStateEqualToOff(self):
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
 		self.assertEqual(mi_fsm.state, 'OFF')
+
+
 
 
 
