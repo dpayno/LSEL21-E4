@@ -37,7 +37,7 @@ class FsmGps(object):
         self.machine.add_transition('fire', 'ON', 'OFF', conditions=['is_not_active'])
         self.machine.add_transition('fire', 'ON', 'ON', conditions=['find_car_and_not_assault_and_active'], after='send_gps_frame')
         self.machine.add_transition('fire', 'ON', 'ASSAULT', conditions=['assault_and_active'], after='init_timer_gps')
-        self.machine.add_transition('fire', 'ASSAULT', 'ASSAULT', conditions=['timeout_or_find_car'], after='send_gps_frame_and_init_timer')
+        self.machine.add_transition('fire', 'ASSAULT', 'ASSAULT', conditions=['timeout_or_find_car_and_active'], after='send_gps_frame_and_init_timer')
         self.machine.add_transition('fire', 'ASSAULT', 'OFF', conditions=['is_not_active'])
 
     """ Guard functions
@@ -54,8 +54,8 @@ class FsmGps(object):
     def assault_and_active(self):
         return self.flag_init_gps_record and self.flag_active
 
-    def timeout_or_find_car(self):
-        return (int(dt.now().timestamp()) > self.timeout_gps) or self.flag_find_car
+    def timeout_or_find_car_and_active(self):
+        return ((int(dt.now().timestamp()) > self.timeout_gps) or self.flag_find_car) and self.flag_active
 
     """ Output functions
     TODO: Modify GPS frame sending with GPS drivers
