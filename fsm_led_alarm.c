@@ -7,7 +7,6 @@
 #include <time.h>
 #include <signal.h>
 
-#include "fsm.h"
 #include "fsm_led_alarm.h"
 
 extern int  active;
@@ -69,9 +68,9 @@ static void blink_leds_and_new_timeout (fsm_t* this)
 //------------Tabla de transiciones de la FSM con logica de salida------------------------------
 static fsm_trans_t led_alarm[] = {
 
-  { led_alarm_idle, is_active, led_alarm_active, init_timer }, 
-  { led_alarm_active, timer_finished, led_alarm_active, blink_leds_and_new_timeout }, 
-  { led_alarm_active, is_not_active, led_alarm_idle, led_off },   
+  { LED_ALARM_IDLE, is_active, LED_ALARM_ACTIVE, init_timer },
+  { LED_ALARM_ACTIVE, timer_finished, LED_ALARM_ACTIVE, blink_leds_and_new_timeout },
+  { LED_ALARM_ACTIVE, is_not_active, LED_ALARM_IDLE, led_off },
   {-1, NULL, -1, NULL },
 
 };

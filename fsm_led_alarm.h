@@ -1,8 +1,9 @@
+#include "fsm.h"
+
 //--------------------FSM_led_alarm States----------------------------
 enum led_alarm_state {
-
-  led_alarm_idle,
-  led_alarm_active,
+  LED_ALARM_IDLE,
+  LED_ALARM_ACTIVE,
 };
 
 fsm_t* fsm_led_alarm_init();
