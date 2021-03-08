@@ -13,8 +13,8 @@ Comprobar transiciones
 3. Comprobar transición OFF / ON si está activo -> done 
 4. Comprobar transición ON / ON si está activo y solicitan la ubicación del coche y no se ha producido un asalto.  -> done 
 5. Comprobar transición ON / ASSAULT si está activo y se produce un asalto del coche. -> done 
-6. Comprobar transición ASSAULT / ASSAULT si está activo y además se desborda el timer o el usuario solicita la ubicación.
-7. Comprobar que solo se puede salir del estado ASSAULT si se desactiva la alarma.
+6. Comprobar transición ASSAULT / ASSAULT si está activo y además se desborda el timer o el usuario solicita la ubicación. -> done
+7. Comprobar que solo se puede salir del estado ASSAULT si se desactiva la alarma. -> done
 8. Comprobar que siempre que se desactive la alarma se vuelve al estado OFF en la siguiente transición. -> done
 
 Comprobar funciones de salida
