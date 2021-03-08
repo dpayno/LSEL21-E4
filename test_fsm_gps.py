@@ -1,9 +1,16 @@
 
 import unittest
+from unittest.mock import Mock
+from unittest.mock import MagicMock
+from unittest.mock import patch
 from fsm_gps import FsmGps
 
 class TestStringMethods(unittest.TestCase):
 
+	###############################################################
+	##                    TRANSITIONS TEST
+	###############################################################
+	
 	"""TEST INIT ESTATE"""
 	def test_fsm_gps_initStateEqualToOff(self):
 		mi_fsm = FsmGps("mi_fsm")
@@ -115,6 +122,22 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.flag_init_gps_record = 0
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'ASSAULT')
+
+	###############################################################
+	##                    OUTPUT FUNCTION TEST
+	###############################################################
+    
+	def test_fsm_gps_checkOutputFunctionSendGpsFrame(self):
+		mock = Mock()
+		mi_fsm = FsmGps("mi_fsm")
+		mi_fsm.start()
+		mi_fsm.state = 'ON'
+		mi_fsm.flag_active = 1
+		mi_fsm.flag_find_car = 0
+		mi_fsm.flag_init_gps_record = 1
+		mi_fsm.fire()
+		self.assertEqual(mi_fsm.state, 'ASSAULT')
+		mock.mi_fsm.init_timer_gps.assert_called()
 
 
 if __name__ == '__main__':
