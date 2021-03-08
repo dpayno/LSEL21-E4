@@ -11,9 +11,9 @@ class FsmGps(object):
 
     """ Default timeout for GPS frame sending
     """
-    TIMEOUT_DEFAULT = 300
 
     def __init__(self, name):
+        self.TIMEOUT_DEFAULT = 300
         self.name = name
 
         """ Input shared variables 
@@ -65,8 +65,8 @@ class FsmGps(object):
 
     def init_timer_gps(self):
         print("Se ha reiniciado el timer GPS")
-        self.timeout_gps = int(dt.now().timestamp()) + TIMEOUT_DEFAULT
+        self.timeout_gps = int(dt.now().timestamp()) + self.TIMEOUT_DEFAULT
 
     def send_gps_frame_and_init_timer(self):
         print("Se ha enviado un nuevo frame GPS y se ha iniciado el timer")
-        self.timeout_gps = int(dt.now().timestamp()) + TIMEOUT_DEFAULT
+        self.timeout_gps = int(dt.now().timestamp()) + self.TIMEOUT_DEFAULT
