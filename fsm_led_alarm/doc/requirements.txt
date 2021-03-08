@@ -1,0 +1,15 @@
+Está integrado con FSM 
+Tiene una función de inicialización que rellena una estructura
+
+Una llamada a fsm_fire llama a la función is_active(), si el estado es IDLE.
+Si la función devuelve TRUE, se cambia al estado WAIT.
+Si la función devuelve FALSE, sigue en el mismo estado
+Una llamada a fsm_fire NO llama a esta función si el estado es WAIT.
+Se puede registrar una función de guarda que indica si ha ocurrido el evento. Se llama cuando fsm_fire, si el estado es READY
+Existe una función de comprobación de tiempo.
+Una llamada a fsm_fire NO llama a esta función si el estado es IDLE.
+Una llamada a fsm_fire llama a esta función si el estado es WAIT.
+Si la función de tiempo devuelve TRUE, se cambia al estado READY si está en WAIT.
+Si la función de tiempo devuelve FALSE, sigue en el estado WAIT.
+Puede haber un tiempo inicial distinto de 0 y no tiene que saltar la función si no aumenta.
+Al pasar de READY a WAIT, se actualiza el timeout con el valor actual de tick más el periodo de anti-rebote
