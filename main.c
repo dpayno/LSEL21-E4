@@ -22,12 +22,18 @@ int main ()
 
 {
   //fsm_t* door_fsm = door_fsm_init();
-  struct_fsm_door_checking * door_fsm;
-  door_fsm_init(door_fsm);
+  uint8_t active = 0;
+  uint8_t door_opened = 0;
+  uint8_t flag_door_opened = 0;
+
+  struct_fsm_door_checking door_fsm;
+  door_fsm_init(&door_fsm, &active, &door_opened, &flag_door_opened);
   
-  while (1) {
-       
-      fsm_fire((fsm_t*)door_fsm);         
+  while (scanf("%d %d", (int*)&active, (int*)&door_opened)==2) {
+      printf("active = %d \n", active);
+      printf("flag_door_open = %d \n", door_opened);
+
+      fsm_fire((fsm_t*)(&door_fsm));   
   }
   return 1;
 }
