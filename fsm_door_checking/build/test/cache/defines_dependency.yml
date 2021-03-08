@@ -1,0 +1,7 @@
+---
+src/fsm_door_checking.c:
+- TEST
+src/fsm_door_checking_test.c:
+- TEST
+src/fsm.c:
+- TEST
