@@ -24,3 +24,7 @@ Comprobar funciones de salida
 11. En la transición ON / ASSAULT se envía la ubicación y se inicializa un timer de 30 segundos. 
 12. En la transición ASSAULT / ASSAULT se envía la ubicación y se inicializa un timer de 30 segundos. 
 13. En las transicioes al estado OFF solo se produce el cambio de estado (no hay ninguna función de salida)
+
+Comprobar entrada de datos 
+
+14. Comprobar lectura de los flags de entrada ??????? (uso de mock)
