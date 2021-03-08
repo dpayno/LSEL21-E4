@@ -92,6 +92,8 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'OFF') # Comprobamos que si se desactiva active pasa a OFF (aunque siga activo el flag de gps_record)
 
+	
+	'''TEST TRANSITION ASAULT/ASSAULT (SI ASK POSITION)'''
 	def test_fsm_gps_checkTransitionAssaultAssaultIfActiveAndAskPosition(self):
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
@@ -102,7 +104,7 @@ class TestStringMethods(unittest.TestCase):
 		mi_fsm.fire()
 		self.assertEqual(mi_fsm.state, 'ASSAULT')
 
-
+	'''TEST TRANSITION ASAULT/ASSAULT (SI TIMEOUT)'''
 	def test_fsm_gps_checkTransitionAssaultAssaultIfActiveAndTimeout(self):
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
