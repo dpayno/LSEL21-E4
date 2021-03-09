@@ -128,17 +128,17 @@ class TestStringMethods(unittest.TestCase):
 	###############################################################
     
 	def test_fsm_gps_checkOutputFunctionSendGpsFrame(self):
-		mock = Mock()
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
 		mi_fsm.state = 'ON'
 		mi_fsm.flag_active = 1
 		mi_fsm.flag_find_car = 0
 		mi_fsm.flag_init_gps_record = 1
-		mi_fsm.fire()
-		self.assertEqual(mi_fsm.state, 'ASSAULT')
-		mock.mi_fsm.init_timer_gps.assert_called()
+		mi_fsm.init_timer_gps = MagicMock()
 
+		mi_fsm.fire()
+		mi_fsm.init_timer_gps.assert_called()
+	
 
 if __name__ == '__main__':
     unittest.main()
