@@ -4,8 +4,9 @@
 #include <stdint.h>
 
 #include "timer.h"
+#include "leds.h"
 
-#define BLINK_TIME 500
+#define BLINK_TIME 5
 
 //-------funciones de guarda para realizar las transiciones y delcaracion de entradas-----------
 static int  is_active (fsm_t* this)
@@ -38,6 +39,7 @@ static int timer_finished (fsm_t* this)
 static void led_off (fsm_t* this)
 {
   printf("Led Off!!!\n");
+  leds_off();
   fsm_led_alarm_t* f = (fsm_led_alarm_t*)this;
   f->next_timeout = 0;
 }
@@ -51,6 +53,7 @@ static void init_timer (fsm_t* this)
 static void blink_leds_and_new_timeout (fsm_t* this)
 {
   printf("Blink Led...\n");
+  leds_blink();
   fsm_led_alarm_t* f = (fsm_led_alarm_t*)this;
   f->next_timeout += BLINK_TIME;
 }
