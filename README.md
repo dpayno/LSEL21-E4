@@ -19,12 +19,15 @@ Comprobar transiciones
 
 Comprobar funciones de salida
 
-9.  En la transición OFF / ON solo se produce el cambio de estado (no hay ninguna función de salida)
-10. En la transición ON / ON se envía la posición del coche. 
-11. En la transición ON / ASSAULT se envía la ubicación y se inicializa un timer de 30 segundos. 
-12. En la transición ASSAULT / ASSAULT se envía la ubicación y se inicializa un timer de 30 segundos. 
-13. En las transicioes al estado OFF solo se produce el cambio de estado (no hay ninguna función de salida)
+9.  En la transición OFF / ON solo se produce el cambio de estado (no hay ninguna función de salida) 
+10. En la transición ON / ON se envía la posición del coche. -> done
+11. En la transición ON / ASSAULT se envía la ubicación y se inicializa un timer. -> done
+
+12. En la transición ASSAULT / ASSAULT se envía la ubicación y se inicializa un timer. -> done
+13. En la transición ASSAULT / ASSAULT si no se desborda el timer ni se solicita la ubicación del coche no se ejecuta la función. -> done
+
+14. En las transicioes al estado OFF solo se produce el cambio de estado (no hay ninguna función de salida)
 
 Comprobar entrada de datos 
 
-14. Comprobar lectura de los flags de entrada ??????? (uso de mock)
+15. Comprobar lectura de los flags de entrada ??????? (uso de mock)
