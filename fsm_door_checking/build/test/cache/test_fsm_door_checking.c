@@ -7,6 +7,8 @@
 
 
 
+
+
 void setUp(void)
 
 {
@@ -23,24 +25,32 @@ void tearDown(void)
 
 
 
-void test_fsm_door_checking_fsm_init_fills_structure(void)
+void test_fsm_door_checkingFsmInitFillsStructure(void)
 
 {
 
- UnityIgnore( (("Need to Implement fsm_door_checking")), (UNITY_UINT)(18));
-
-    fsm_t* zero;
-
-    fsm_t* full;
-
-    bzero(zero, sizeof(fsm_t));
-
- bzero(full, sizeof(fsm_t));
 
 
+    printf("Test 0\n");
 
- full = door_fsm_init();
+    struct_fsm_door_checking zero;
 
+    printf("Test 1dd\n");
 
+    struct_fsm_door_checking full;
+
+    printf("Test 1\n");
+
+    bzero(&zero, sizeof(struct_fsm_door_checking));
+
+ bzero(&full, sizeof(struct_fsm_door_checking));
+
+ printf("Test 2\n");
+
+   door_fsm_init(&full, 0, 0, 0);
+
+   printf("Test 3\n");
+
+ do {if ((memcmp(&zero, &full, sizeof(struct_fsm_door_checking)) != 0)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(30)));}} while(0);
 
 }
