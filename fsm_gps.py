@@ -36,7 +36,7 @@ class FsmGps(object):
         self.machine.add_transition('fire', 'OFF', 'ON', conditions=['is_active'])
         self.machine.add_transition('fire', 'ON', 'OFF', conditions=['is_not_active'])
         self.machine.add_transition('fire', 'ON', 'ON', conditions=['find_car_and_not_assault_and_active'], after='send_gps_frame')
-        self.machine.add_transition('fire', 'ON', 'ASSAULT', conditions=['assault_and_active'], after='init_timer_gps')
+        self.machine.add_transition('fire', 'ON', 'ASSAULT', conditions=['assault_and_active'], after='send_gps_frame_and_init_timer')
         self.machine.add_transition('fire', 'ASSAULT', 'ASSAULT', conditions=['timeout_or_find_car_and_active'], after='send_gps_frame_and_init_timer')
         self.machine.add_transition('fire', 'ASSAULT', 'OFF', conditions=['is_not_active'])
 
@@ -62,10 +62,6 @@ class FsmGps(object):
     """ 
     def send_gps_frame(self):
         print("Se ha enviado un nuevo frame GPS")
-
-    def init_timer_gps(self):
-        print("Se ha reiniciado el timer GPS")
-        self.timeout_gps = int(dt.now().timestamp()) + self.TIMEOUT_DEFAULT
 
     def send_gps_frame_and_init_timer(self):
         print("Se ha enviado un nuevo frame GPS y se ha iniciado el timer")
