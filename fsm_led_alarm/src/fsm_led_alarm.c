@@ -64,8 +64,8 @@ static void blink_leds_and_new_timeout (fsm_t* this)
 static fsm_trans_t led_alarm[] = {
 
   { LED_ALARM_IDLE, is_active, LED_ALARM_ACTIVE, init_timer },
-  { LED_ALARM_ACTIVE, timer_finished, LED_ALARM_ACTIVE, blink_leds_and_new_timeout },
   { LED_ALARM_ACTIVE, is_not_active, LED_ALARM_IDLE, led_off },
+  { LED_ALARM_ACTIVE, timer_finished, LED_ALARM_ACTIVE, blink_leds_and_new_timeout },
   {-1, NULL, -1, NULL },
 
 };

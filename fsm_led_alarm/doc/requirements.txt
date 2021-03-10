@@ -1,21 +1,19 @@
 Está integrado con FSM 
 Tiene una función de inicialización que rellena una estructura
+La máquina de estados se inicializa en estado IDLE
 
 // IDLE
 Si el estado es IDLE, una llamada a fsm_fire llama a la función is_active()
 Si el estado es ACTIVE, una llamada a fsm_fire NO llama a la función is_active() 
 Si, estando en IDLE, la función is_active() devuelve TRUE, se cambia de estado a ACTIVE.
-Si la función is_active() devuelve TRUE, se ejecuta la función init_timer()
+Si la función is_active() devuelve TRUE, se actualiza el valor del timeout con una constante
 Si la función is_active() devuelve FALSE, se sigue en el estado IDLE.
 Una llamada a fsm_fire de IDLE a ACTIVE, se actualiza el timeout
 Al pasar de IDLE a ACTIVE, se actualiza el timeout con el valor actual de tick más el periodo del blink LED
 
 // ACTIVE
-Una llamada a fsm_fire llama a la función is_not_active(), si el estado es ACTIVE y timer_finished devuelve FALSE.
-Una llamada a fsm_fire NO llama a la función is_not_active(), si el estado es IDLE.
-Si, estando en ACTIVE, la función is_not_active() devuelve TRUE, se cambia al estado IDLE.
-Si la función is_not_active() devuelve TRUE, se ejecuta la función led_off()
-Si, estando en ACTIVE, la función is_not_active() devuelve FALSE, se sigue en el estado ACTIVE.
-Si, estando en ACTIVE, la función finish_timer() devuelve TRUE, se sigue en el estado ACTIVE.
-Si la función finish_timer() devuelve TRUE, se ejecuta la función blink_leds_and_new_timeout()
-Si se llama a la función blink_leds_and_new_timeout(), se actualiza el timeout 
+Hay una función is_active() que comprueba el valor del flag 
+Si, estando en ACTIVE, el flag active es FALSE, se ejecuta la función led_off() y se resetea el timeout
+Si, estando en ACTIVE, el flag active es FALSE, se cambia al estado IDLE.
+Si, estando en ACTIVE, el flag active es TRUE, se sigue en el estado ACTIVE.
+Si, estando en ACTIVE, la función finish_timer() devuelve TRUE, se ejecuta la función blink_leds() y se actualiza el timeout
