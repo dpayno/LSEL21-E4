@@ -1,14 +1,9 @@
-Está integrado con FSM 
-Tiene una función de inicialización que rellena una estructura
 
-// IDLE
-Si el estado es IDLE, una llamada a fsm_fire llama a la función is_active()
-Si el estado es ACTIVE, una llamada a fsm_fire NO llama a la función is_active() 
-Si, estando en IDLE, la función is_active() devuelve TRUE, se cambia de estado a ACTIVE.
-Si la función is_active() devuelve TRUE, se ejecuta la función init_timer()
-Si la función is_active() devuelve FALSE, se sigue en el estado IDLE.
-Una llamada a fsm_fire de IDLE a ACTIVE, se actualiza el timeout
-Al pasar de IDLE a ACTIVE, se actualiza el timeout con el valor actual de tick más el periodo del blink LED
+
+TEST_1: Tiene una función de inicialización que rellena una estructura
+TEST_2: Compruebo que estoy en el estado inicial cuando empiezo
+TEST_3: Si el estado es IDLE, hay fsm_fire llama a la función is_active() y me devuelve TRUE, cambio a ACTIVE y se actualiza el timeoutTEST_4: Si el estado es IDLE, hay fsm_fire llama a la función is_active() y me devuelve FALSE, me quedo en IDLE
+
 
 // ACTIVE
 Una llamada a fsm_fire llama a la función is_not_active(), si el estado es ACTIVE y timer_finished devuelve FALSE.
