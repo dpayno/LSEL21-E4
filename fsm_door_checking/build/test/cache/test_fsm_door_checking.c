@@ -99,6 +99,8 @@ void test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_doo
 
     is_active_and_door_open_CMockIgnoreAndReturn(54, 1);
 
+    set_door_flag_CMockIgnore();
+
 
 
     fsm_door_checking_init(&f, 8);
@@ -107,7 +109,7 @@ void test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_doo
 
 
 
-    do {if ((f.fsm_door_checking.current_state == ENABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(59)));}} while(0);
+    do {if ((f.fsm_door_checking.current_state == ENABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(60)));}} while(0);
 
 }
 
@@ -121,7 +123,7 @@ void test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and
 
 
 
-    is_active_and_door_open_CMockIgnoreAndReturn(66, 0);
+    is_active_and_door_open_CMockIgnoreAndReturn(67, 0);
 
 
 
@@ -131,7 +133,7 @@ void test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and
 
 
 
-    do {if ((f.fsm_door_checking.current_state == DISABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(71)));}} while(0);
+    do {if ((f.fsm_door_checking.current_state == DISABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(72)));}} while(0);
 
 }
 
@@ -153,7 +155,9 @@ void test_fsm_door_checking_FireCalls_is_not_active_WhenEnable(void)
 
 
 
-    is_not_active_CMockExpectAnyArgsAndReturn(82, 1);
+    is_not_active_CMockExpectAnyArgsAndReturn(83, 1);
+
+    clear_door_flag_CMockIgnore();
 
 
 
@@ -177,7 +181,9 @@ void test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTr
 
 
 
-    is_not_active_CMockIgnoreAndReturn(94, 1);
+    is_not_active_CMockIgnoreAndReturn(96, 1);
+
+    clear_door_flag_CMockIgnore();
 
 
 
@@ -189,7 +195,7 @@ void test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTr
 
 
 
-    do {if ((f.fsm_door_checking.current_state == DISABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(100)));}} while(0);
+    do {if ((f.fsm_door_checking.current_state == DISABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(103)));}} while(0);
 
 }
 
@@ -203,7 +209,7 @@ void test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_
 
 
 
-    is_not_active_CMockIgnoreAndReturn(107, 0);
+    is_not_active_CMockIgnoreAndReturn(110, 0);
 
 
 
@@ -215,6 +221,6 @@ void test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_
 
 
 
-    do {if ((f.fsm_door_checking.current_state == ENABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(113)));}} while(0);
+    do {if ((f.fsm_door_checking.current_state == ENABLE)) {} else {UnityFail( ((" Expression Evaluated To FALSE")), (UNITY_UINT)((UNITY_UINT)(116)));}} while(0);
 
 }

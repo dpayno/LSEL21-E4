@@ -1,0 +1,42 @@
+---
+:source:
+  :path: test
+  :file: test_fsm_door_checking.c
+:successes:
+- :test: test_fsm_door_checkingFsmInitFillsStructure
+  :line: 22
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireCalls_is_active_and_door_open_WhenDisable
+  :line: 36
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_door_openIsTrue
+  :line: 50
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and_door_openIsFalse
+  :line: 63
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireCalls_is_not_active_WhenEnable
+  :line: 79
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTrue
+  :line: 92
+  :message: ''
+  :unity_test_time: 0
+- :test: test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_IsFalse
+  :line: 106
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 7
+  :passed: 7
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.009504400019068271
