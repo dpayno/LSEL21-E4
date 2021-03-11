@@ -1,8 +1,11 @@
 #include "fsm_door_checking.h"
 #include "door.h"
 
+#include "fsm_door_checking_internal.h"
+
+
 // Funciones guarda
-static int is_active_and_door_open (fsm_t* this)
+/*static int is_active_and_door_open (fsm_t* this)
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
 	return ( is_active(fp->u8_index) && is_door_open(fp->u8_index) ); 
@@ -26,7 +29,7 @@ static void clear_door_flag (fsm_t* this)
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
   	set_flag_door_open (fp->u8_index, 0);
-}
+}*/
 
 
 // Explicit FSM description

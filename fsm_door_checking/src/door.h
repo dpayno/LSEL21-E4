@@ -2,6 +2,8 @@
 #define DOOR_H
 
 #include <stdio.h>
+#include "stdlib.h"
+#include "stdint.h"
 
 #define NDoors 4
 

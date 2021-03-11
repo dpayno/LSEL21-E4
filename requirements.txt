@@ -1,5 +1,5 @@
-Esta integrado con FSM.
-Tiene funcion de inicializacion que rellena la estructura.
++Esta integrado con FSM.
++Tiene funcion de inicializacion que rellena la estructura.
 
 Se puede registrar una funcion de guarda ¨is_active_and_door_open¨ que indica si ha ocurrido un evento.
 Una llamada a FMS_fire llama a la funcion is_active_and_door_open, si el estado es DISABLE.

@@ -5,3 +5,9 @@ src/fsm_door_checking_test.c:
 - TEST
 src/fsm.c:
 - TEST
+src/door.c:
+- TEST
+build/test/mocks/mock_fsm_door_checking.c:
+- TEST
+build/test/mocks/mock_fsm_door_checking_internal.c:
+- TEST

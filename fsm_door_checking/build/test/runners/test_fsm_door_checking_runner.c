@@ -2,6 +2,8 @@
 
 /*=======Automagically Detected Files To Include=====*/
 #include "unity.h"
+#include "cmock.h"
+#include "mock_fsm_door_checking_internal.h"
 
 int GlobalExpectCount;
 int GlobalVerifyOrder;
@@ -11,6 +13,12 @@ char* GlobalOrderError;
 extern void setUp(void);
 extern void tearDown(void);
 extern void test_fsm_door_checkingFsmInitFillsStructure(void);
+extern void test_fsm_door_checking_FireCalls_is_active_and_door_open_WhenDisable(void);
+extern void test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_door_openIsTrue(void);
+extern void test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and_door_openIsFalse(void);
+extern void test_fsm_door_checking_FireCalls_is_not_active_WhenEnable(void);
+extern void test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTrue(void);
+extern void test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_IsFalse(void);
 
 
 /*=======Mock Management=====*/
@@ -19,12 +27,15 @@ static void CMock_Init(void)
   GlobalExpectCount = 0;
   GlobalVerifyOrder = 0;
   GlobalOrderError = NULL;
+  mock_fsm_door_checking_internal_Init();
 }
 static void CMock_Verify(void)
 {
+  mock_fsm_door_checking_internal_Verify();
 }
 static void CMock_Destroy(void)
 {
+  mock_fsm_door_checking_internal_Destroy();
 }
 
 /*=======Test Reset Options=====*/
@@ -75,7 +86,14 @@ static void run_test(UnityTestFunction func, const char* name, int line_num)
 int main(void)
 {
   UnityBegin("test_fsm_door_checking.c");
-  run_test(test_fsm_door_checkingFsmInitFillsStructure, "test_fsm_door_checkingFsmInitFillsStructure", 17);
+  run_test(test_fsm_door_checkingFsmInitFillsStructure, "test_fsm_door_checkingFsmInitFillsStructure", 22);
+  run_test(test_fsm_door_checking_FireCalls_is_active_and_door_open_WhenDisable, "test_fsm_door_checking_FireCalls_is_active_and_door_open_WhenDisable", 36);
+  run_test(test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_door_openIsTrue, "test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_door_openIsTrue", 50);
+  run_test(test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and_door_openIsFalse, "test_fsm_door_checking_FireDontLeadsTransitionWhenDisable_and_is_active_and_door_openIsFalse", 62);
+  run_test(test_fsm_door_checking_FireCalls_is_not_active_WhenEnable, "test_fsm_door_checking_FireCalls_is_not_active_WhenEnable", 78);
+  run_test(test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTrue, "test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTrue", 90);
+  run_test(test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_IsFalse, "test_fsm_door_checking_FireDontLeadsTransitionWhenEnable_and_is_not_active_IsFalse", 103);
 
+  CMock_Guts_MemFreeFinal();
   return UnityEnd();
 }
