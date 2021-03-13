@@ -1,6 +1,5 @@
 #include "unity.h"
 #include "string.h"
-#include "fsm_door_checking_test.h"
 #include "fsm.h"
 #include "fsm_door_checking.h"
 #include <stdio.h>
@@ -52,7 +51,7 @@ void test_fsm_door_checking_FireLeadsTransitionWhenDisable_and_is_active_and_doo
     fsm_door_checking_t f;
 
     is_active_and_door_open_IgnoreAndReturn(1);
-    set_door_flag_Ignore();
+    set_door_flag_Expect();
 
     fsm_door_checking_init(&f, 8);
     fsm_fire((fsm_t*)&f);
@@ -81,7 +80,7 @@ void test_fsm_door_checking_FireCalls_is_not_active_WhenEnable(void)
     fsm_door_checking_t f;
 
     is_not_active_ExpectAnyArgsAndReturn(1);
-    clear_door_flag_Ignore();
+    clear_door_flag_Expect();
 
     fsm_door_checking_init(&f, 8);
     f.fsm_door_checking.current_state = ENABLE;
@@ -94,7 +93,7 @@ void test_fsm_door_checking_FireLeadsTransitionWhenEnable_and_is_not_active_IsTr
     fsm_door_checking_t f;
 
     is_not_active_IgnoreAndReturn(1);
-    clear_door_flag_Ignore();
+    clear_door_flag_Expect();
 
     fsm_door_checking_init(&f, 8);
     f.fsm_door_checking.current_state = ENABLE;

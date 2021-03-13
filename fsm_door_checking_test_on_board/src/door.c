@@ -4,10 +4,10 @@
 typedef union {
   struct
   {
-    uint8_t active:1;
-    uint8_t door_status:1;
-    uint8_t flag_door_open:1;
-    uint8_t pin:4;
+    unsigned active:1;
+    unsigned door_status:1;
+    unsigned flag_door_open:1;
+    unsigned pin:4;
   };
   uint8_t data;
 }flags_door_t;
