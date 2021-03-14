@@ -2,7 +2,6 @@
 
 void hard_gpio_pinSetUp (uint16_t pin, uint8_t mode) 
 {  
-    printf("pin bit mode %d\n",0x01<<pin);
     switch (mode)
     {
     case HARD_GPIO_OUTPUT:
