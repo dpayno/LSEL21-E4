@@ -1,0 +1,8 @@
+---
+- "/usr/local/bundle/gems/ceedling-0.30.0/vendor/unity/src/unity.h"
+- src/fsm_door_checking_test.h
+- src/fsm.h
+- src/fsm_door_checking.h
+- src/door.h
+- build/test/mocks/mock_fsm_door_checking_internal.h
+- build/temp/_test_fsm_door_checking.c
