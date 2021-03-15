@@ -40,28 +40,21 @@ uint32 user_rf_cal_sector_set(void)
 void task_blink(void* ignore)
 {
     fsm_door_checking_t  left_door_fsm;
-    //fsm_door_checking_t  right_door_fsm;
     int alarm_status = 1;
 
     fsm_door_checking_init(&left_door_fsm, D2);
     fsm_door_checking_turn_on_off_active(&left_door_fsm, alarm_status);
-    
-    //fsm_door_checking_init(&right_door_fsm, 7);
 
-    //testing stuff
     GPIO_AS_OUTPUT(GPIO_Pin_5);
 
     while (1) {
 
         
         fsm_fire((fsm_t*)&left_door_fsm);
-        //fsm_fire((fsm_t*)&right_door_fsm);
 
         if ( fsm_door_checking_is_in_alarm (&left_door_fsm) ) GPIO_OUTPUT(GPIO_Pin_5, 1);
         else GPIO_OUTPUT(GPIO_Pin_5, 0);
 
-        //if ( fsm_door_checking_is_in_alarm (&right_door_fsm) ) GPIO_OUTPUT(GPIO_Pin_7, 1);
-        //else GPIO_OUTPUT(GPIO_Pin_7, 1);
   
     }
 

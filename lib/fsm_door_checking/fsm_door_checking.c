@@ -1,8 +1,5 @@
 #include "fsm_door_checking.h"
 
-#include "door.h"
-#include "fsm_door_checking_internal.h"
-
 // Explicit FSM description
 
 static fsm_trans_t door_trans[] = {

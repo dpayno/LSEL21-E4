@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include "stdlib.h"
 #include "stdint.h"
+#include "door.h"
+#include "fsm_door_checking_internal.h"
 
 
 enum door_checking_states {

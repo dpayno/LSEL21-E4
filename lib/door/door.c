@@ -1,13 +1,12 @@
 #include "door.h"
-//#include "hardware.h"
 
 typedef union {
   struct
   {
-    uint8_t active:1;
-    uint8_t door_status:1;
-    uint8_t flag_door_open:1;
-    uint8_t pin:4;
+    unsigned active:1;
+    unsigned door_status:1;
+    unsigned flag_door_open:1;
+    unsigned pin:5;
   };
   uint8_t data;
 }flags_door_t;
@@ -43,12 +42,12 @@ uint8_t get_flag_door_open (uint8_t index)
 
 uint8_t is_door_open (uint8_t index)
 {
-  flags_doors[index].door_status = 1;//gpio_read (flags_doors[index].pin);
+  flags_doors[index].door_status = hard_gpio_digitalRead (flags_doors[index].pin);
   return flags_doors[index].door_status;
 }
 
 void set_pin (uint8_t index, uint8_t pin)
 {
-  //gpio.setup (pin, INPUT);
+  hard_gpio_pinSetUp (pin, HARD_GPIO_INPUT);
   flags_doors[index].pin = pin;
 }

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "stdlib.h"
 #include "stdint.h"
+#include "hardware_esp8266.h"
 
 #define NDoors 4
 
