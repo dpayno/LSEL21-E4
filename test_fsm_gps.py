@@ -138,7 +138,7 @@ class TestStringMethods(unittest.TestCase):
 	###############################################################
 
 
-    '''CHECK FUNCIÓN GPSFRAME() EN TRANSICIÓN ON/ON'''
+	'''CHECK FUNCIÓN GPSFRAME() EN TRANSICIÓN ON/ON'''
 	def test_fsm_gps_checkOutputFunctionSendGpsFrame(self):
 		mi_fsm = FsmGps("mi_fsm")
 		mi_fsm.start()
