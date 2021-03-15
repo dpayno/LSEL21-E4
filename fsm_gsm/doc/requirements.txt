@@ -1,0 +1,22 @@
+Estar hecho con FSM
+Estado inicial GSM_IDLE
+Al inicializar la FSM, se actualiza el timeout
+
+// GSM_IDLE
+Check_timeout() devuelve TRUE si el tiempo actual es mayor que el timeout.
+Si check_timeout() devuelve FALSE, se queda en estado GSM_IDLE.
+Si check_timeout() devuelve TRUE, se pasa al estado GSM_CHECK.
+
+// GSM_CHECK
+gsm_data_available() devuelve TRUE si hay datos que leer, si no, FALSE
+gsm_not_data_available_and_fifo_is_empty() devuelve TRUE si no hay datos que leer y la fifo está vacía, si no, FALSE
+gsm_not_data_available_and_fifo_is_not_empty() devuelve TRUE si no hay datos que leer y la fifo no está vacía, si no, FALSE
+Si gsm_data_available() devuelve TRUE, se pasa al estado GSM_READ y se ejecuta la función gsm_read()
+Si gsm_not_data_available_and_fifo_is_empty() devuelve TRUE, se pasa al estado GSM_IDLE.
+Si gsm_not_data_available_and_fifo_is_not_empty() devuelve TRUE, se pasa al estado GSM_IDLE y se ejecuta la función read_fifo_and_gsm_send().
+
+// GSM_READ
+active_request() devuelve TRUE si data = ACTIVE
+deactive_request() devuelve TRUE si data = DEACTIVE
+pos_request() devuelve TRUE si data = GET_POS
+Siempre que se hace fsm_fire(), se va al estado GSM_IDLE.
