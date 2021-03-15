@@ -1,0 +1,34 @@
+// AUTOMATICALLY GENERATED FILE. PLEASE DO NOT MODIFY IT MANUALLY
+
+// PIO Unified Debugger
+//
+// Documentation: https://docs.platformio.org/page/plus/debugging.html
+// Configuration: https://docs.platformio.org/page/projectconf/section_env_debug.html
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug",
+            "executable": "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/.pio/build/nodemcuv2/firmware.elf",
+            "projectEnvName": "nodemcuv2",
+            "toolchainBinDir": "",
+            "preLaunchTask": {
+                "type": "PlatformIO",
+                "task": "Pre-Debug"
+            },
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (skip Pre-Debug)",
+            "executable": "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/.pio/build/nodemcuv2/firmware.elf",
+            "projectEnvName": "nodemcuv2",
+            "toolchainBinDir": "",
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
