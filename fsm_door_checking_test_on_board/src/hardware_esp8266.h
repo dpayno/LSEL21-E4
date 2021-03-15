@@ -3,8 +3,8 @@
 
 #include "esp_common.h"
 #include "freertos/task.h"
-#include "stdint.h"
 #include "gpio.h"
+#include "stdint.h"
 
 #define D0 16
 #define D1 5 //GPIO_Pin_5

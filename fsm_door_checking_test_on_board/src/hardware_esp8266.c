@@ -7,10 +7,12 @@ void hard_gpio_pinSetUp (uint16_t pin, uint8_t mode)
     case HARD_GPIO_OUTPUT:
         if (pin == D0) gpio16_output_conf();
         else GPIO_AS_OUTPUT(0x01<<pin);
+        break;
 
     case HARD_GPIO_INPUT:
         if (pin == D0) gpio16_input_conf();
         else GPIO_AS_INPUT(0x01<<pin);
+        break;
     
     default:
         break;
