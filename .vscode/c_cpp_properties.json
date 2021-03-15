@@ -27,6 +27,8 @@
                 "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/ssl",
                 "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/json",
                 "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/openssl",
+                "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/lib/door",
+                "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/lib/fsm_door_checking",
                 "C:/Users/Gerardo/.platformio/packages/tool-unity",
                 ""
             ],
@@ -52,6 +54,8 @@
                     "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/ssl",
                     "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/json",
                     "C:/Users/Gerardo/.platformio/packages/framework-esp8266-rtos-sdk/include/openssl",
+                    "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/lib/door",
+                    "C:/Users/Gerardo/Documents/PlatformIO/Projects/fsm_led_alarm_test_on_board_a/lib/fsm_door_checking",
                     "C:/Users/Gerardo/.platformio/packages/tool-unity",
                     ""
                 ]
