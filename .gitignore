@@ -6,5 +6,5 @@ build/
 .vscode/ipch
 __pycache__/
 sim868_driver/config.json
-
+*.pyc
 
