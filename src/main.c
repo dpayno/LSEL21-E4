@@ -1,12 +1,23 @@
 #include "esp_common.h"
 #include "freertos/task.h"
 #include "gpio.h"
+#include "esp_wifi_station_module.h"
 
-#include "fsm.h"
-#include "fsm_led_alarm.h"
-#include "hardware_esp8266.h"
-#include "fsm_door_checking.h"
+#define ap_name        "monde38"
+#define ap_password    "monde.38"
 
+/******************************************************************************
+ * FunctionName : user_rf_cal_sector_set
+ * Description  : SDK just reversed 4 sectors, used for rf init data and paramters.
+ *                We add this function to force users to set rf cal sector, since
+ *                we don't know which sector is free in user's application.
+ *                sector map for last several sectors : ABCCC
+ *                A : rf cal
+ *                B : rf init data
+ *                C : sdk parameters
+ * Parameters   : none
+ * Returns      : rf cal sector
+*******************************************************************************/
 uint32 user_rf_cal_sector_set(void)
 {
     flash_size_map size_map = system_get_flash_size_map();
@@ -39,31 +50,18 @@ uint32 user_rf_cal_sector_set(void)
 }
 
 void task_blink(void* ignore)
-{
-    fsm_led_alarm_t  led1_fsm;
-    fsm_led_alarm_init(&led1_fsm, D0, 100);
+{   
 
-    fsm_door_checking_t  l_door;
-    fsm_door_checking_init(&l_door, D1);
-    
-    hard_gpio_pinSetUp(D2, HARD_GPIO_INPUT);
-    hard_gpio_pinSetUp(D3, HARD_GPIO_OUTPUT);
+    esp_wifi_station_module mod;
+    init_module_station( &mod, ap_name, ap_password);
+    connect_to_ap();
+    while(true) {}
 
-    while (1) {
-
-        fsm_led_alarm_turn_on_off_active(&led1_fsm, hard_gpio_digitalRead(D2));
-        fsm_door_checking_turn_on_off_active(&l_door, hard_gpio_digitalRead(D2));
-
-        fsm_fire((fsm_t*)&led1_fsm);
-        fsm_fire((fsm_t*)&l_door);
-
-        if (fsm_door_checking_is_in_alarm(&l_door)) hard_gpio_digitalWrite(D3,1);
-        else hard_gpio_digitalWrite(D3,0);
-  
-    }
 
     vTaskDelete(NULL);
 }
+
+
 
 /******************************************************************************
  * FunctionName : user_init
