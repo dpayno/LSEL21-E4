@@ -2,9 +2,10 @@
 #include "freertos/task.h"
 #include "gpio.h"
 #include "esp_wifi_station_module.h"
+#include "websocket.h"
 
-#define ap_name        "monde38"
-#define ap_password    "monde.38"
+#define ap_name        "AAA"
+#define ap_password    "AAA"
 
 /******************************************************************************
  * FunctionName : user_rf_cal_sector_set
@@ -49,14 +50,13 @@ uint32 user_rf_cal_sector_set(void)
     return rf_cal_sec;
 }
 
-void task_blink(void* ignore)
+void task_01(void* ignore)
 {   
-
-    esp_wifi_station_module mod;
-    init_module_station( &mod, ap_name, ap_password);
-    connect_to_ap();
+    os_printf("SDK version:%s\n", system_get_sdk_version());
+    // esp_wifi_station_module mod;
+    // init_module_station( &mod, ap_name, ap_password);
+    // connect_to_ap();
     while(true) {}
-
 
     vTaskDelete(NULL);
 }
@@ -71,5 +71,5 @@ void task_blink(void* ignore)
 *******************************************************************************/
 void user_init(void)
 {
-    xTaskCreate(&task_blink, "startup", 2048, NULL, 1, NULL);
+    xTaskCreate(&task_01, "startup", 2048, NULL, 1, NULL);
 }
