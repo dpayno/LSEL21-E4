@@ -1,6 +1,23 @@
 # LSEL21-E4
 LSEL 2021 Equipo 4 - Sistema de seguridad para coches
 
+
+## CONEXIÓN  RASPBERRY/SIM868
+
+1. Conectar alimentaciones de ambas placas, conectar tierras (recomendado alimentar el SIM868 de forma externa a la Raspberry para evitar quemar la placa)
+2. Conectar PIN4 de la Raspberry al pin POWKEY del SIM868
+3. Conectar pines UART
+4. Conectar 3,3V de la Raspberry a VDD del SIM868
+
+NOTA: no es necesario conectar PWREN
+
+## CONFIGURACIÓN SIM868
+
+Para un correcto funcionamiento del código es necesario activar la opción echo, para ello debemos introducir los siguientes comandos:
+
+1. ATE1
+2. AT&W
+
 ## FSM_GPS
 
 ### Requisitos
