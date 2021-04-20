@@ -10,6 +10,7 @@
             "includePath": [
                 "c:/Users/payno/Desktop/LSEL21-E4/include",
                 "c:/Users/payno/Desktop/LSEL21-E4/src",
+                "c:/Users/payno/Desktop/LSEL21-E4/lib/mpu6050",
                 "c:/Users/payno/Desktop/LSEL21-E4/lib/esp_wifi_station_module",
                 "C:/Users/payno/.platformio/packages/framework-esp8266-rtos-sdk/include",
                 "C:/Users/payno/.platformio/packages/framework-esp8266-rtos-sdk/extra_include",
@@ -29,7 +30,6 @@
                 "c:/Users/payno/Desktop/LSEL21-E4/lib/fsm_led_alarm",
                 "c:/Users/payno/Desktop/LSEL21-E4/lib/hardware_esp8266",
                 "c:/Users/payno/Desktop/LSEL21-E4/lib/led",
-                "c:/Users/payno/Desktop/LSEL21-E4/lib/mpu6050",
                 "c:/Users/payno/Desktop/LSEL21-E4/lib/timer",
                 "C:/Users/payno/.platformio/packages/tool-unity",
                 ""
@@ -39,6 +39,7 @@
                 "path": [
                     "c:/Users/payno/Desktop/LSEL21-E4/include",
                     "c:/Users/payno/Desktop/LSEL21-E4/src",
+                    "c:/Users/payno/Desktop/LSEL21-E4/lib/mpu6050",
                     "c:/Users/payno/Desktop/LSEL21-E4/lib/esp_wifi_station_module",
                     "C:/Users/payno/.platformio/packages/framework-esp8266-rtos-sdk/include",
                     "C:/Users/payno/.platformio/packages/framework-esp8266-rtos-sdk/extra_include",
@@ -58,7 +59,6 @@
                     "c:/Users/payno/Desktop/LSEL21-E4/lib/fsm_led_alarm",
                     "c:/Users/payno/Desktop/LSEL21-E4/lib/hardware_esp8266",
                     "c:/Users/payno/Desktop/LSEL21-E4/lib/led",
-                    "c:/Users/payno/Desktop/LSEL21-E4/lib/mpu6050",
                     "c:/Users/payno/Desktop/LSEL21-E4/lib/timer",
                     "C:/Users/payno/.platformio/packages/tool-unity",
                     ""

@@ -4,6 +4,9 @@
 #include "i2c_master.h"
 #include <stdio.h>
 
+#include "esp_common.h"
+#include "freertos/task.h"
+
 void mpu6050_i2c_init()
 {
     i2c_master_gpio_init();
@@ -62,6 +65,7 @@ bool mpu6050_read(uint8_t num_bytes, int8_t* data)
 void mpu_get_raw_data()
 {
     int8_t raw_packets[6] = {0, 0, 0, 0, 0, 0};
+    int16_t raw_data[3] = {0,0,0};
 
     if (mpu6050_begin_transmision()) {
         printf("There is communication!\n");
@@ -71,11 +75,19 @@ void mpu_get_raw_data()
     mpu6050_end_transmision();
 
     mpu6050_request_from(ACCEL_XOUT_H);
+    vTaskDelay(10 / portTICK_RATE_MS);
+    
     mpu6050_read(6, raw_packets);
     mpu6050_end_transmision();
 
-    for (int i = 0; i < 6; i++) {
-        printf("Byte %d value: %d\n", i, raw_packets[i]);
+    for(int i = 0; i < 3; i++) {
+        raw_data[i] =  raw_packets[2*i] << 8;
+        raw_data[i] |= raw_packets[2*i + 1];
     }
+
+    printf("X: %d\r\nY: %d\r\nZ: %d\r\n",
+              raw_data[0],
+              raw_data[1],
+              raw_data[2]);
 }
 
