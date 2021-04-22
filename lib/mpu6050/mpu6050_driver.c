@@ -7,87 +7,90 @@
 #include "esp_common.h"
 #include "freertos/task.h"
 
-void mpu6050_i2c_init()
+int32_t mpu6050_i2c_init()
 {
+    uint8_t mpu_init_data[] = {0x00};
     i2c_master_gpio_init();
-    i2c_master_init();
+    return mpu6050_i2c_write(PWR_MGMT_1, mpu_init_data, 1);
 }
 
-bool mpu6050_begin_transmision()
+int32_t mpu6050_i2c_write(uint8_t reg, uint8_t* data, uint8_t length)
 {
-    uint8_t i2c_addr_write = (MPU6050_SENSOR_ADDR << 1);
-    
+    // S
     i2c_master_start();
-    i2c_master_writeByte(i2c_addr_write);
-    
-    return i2c_master_checkAck();
-}
 
-void mpu6050_end_transmision()
-{
+    // AD + W
+    i2c_master_writeByte(MPU6050_SENSOR_ADDR << 1);
+    if (!i2c_master_checkAck()) { // ACK
+        i2c_master_stop();
+        return -1;
+    }
+
+    // RA
+    i2c_master_writeByte(reg);
+    if (!i2c_master_checkAck()) { // ACK
+        i2c_master_stop();
+        return -2;
+    }
+
+    // DATA
+    for (int i = 0; i < length; i++) {
+        i2c_master_writeByte(data[i]);
+        if (!i2c_master_checkAck()) { // ACK
+            i2c_master_stop();
+            return -3;
+        }
+    }
+
+    // P
     i2c_master_stop();
+
+    return 0;
 }
 
-bool mpu6050_write(uint8_t i2c_data)
+int32_t mpu6050_i2c_read(uint8_t *data, uint16_t length)
 {
-    i2c_master_writeByte(i2c_data);
-    
-    return i2c_master_checkAck();
-}
-
-bool mpu6050_request_from(uint8_t i2c_addr)
-{
-    uint8_t i2c_addr_read = (i2c_addr << 1) + 1;
-    
+    // S
     i2c_master_start();
-    i2c_master_writeByte(i2c_addr_read);
-    
-    return i2c_master_checkAck();
-}
 
-bool mpu6050_read(uint8_t num_bytes, int8_t* data)
-{
-    if (num_bytes < 1 || data == NULL) return false;
+    // AD + W
+    i2c_master_writeByte(MPU6050_SENSOR_ADDR << 1);
+    if (!i2c_master_checkAck()) { // ACK
+        i2c_master_stop();
+        return -1;
+    }
 
-    int i;
-    for(i = 0; i < num_bytes - 1; i++)
-    {
+    // RA
+    i2c_master_writeByte(ACCEL_XOUT_H);
+    if (!i2c_master_checkAck()) { // ACK
+        i2c_master_stop();
+        return -2;
+    }
+
+    // S
+    i2c_master_start();
+
+    // AD + R
+    i2c_master_writeByte(MPU6050_SENSOR_ADDR << 1 | 1);
+
+    if (!i2c_master_checkAck()) { // ACK
+        i2c_master_stop();
+        return -3;
+    }
+    for (int i = 0; i < length - 1; i++) {
+        // DATA
         data[i] = i2c_master_readByte();
+        // ACK
         i2c_master_send_ack();
     }
-    // nack the final packet so that the slave releases SDA
-    data[num_bytes - 1] = i2c_master_readByte();
+
+    // DATA
+    data[length] = i2c_master_readByte();
+    // NACK
     i2c_master_send_nack();
 
-    return true;
+    // P
+    i2c_master_stop();
+
+    return 0;
 }
-
-void mpu_get_raw_data()
-{
-    int8_t raw_packets[6] = {0, 0, 0, 0, 0, 0};
-    int16_t raw_data[3] = {0,0,0};
-
-    if (mpu6050_begin_transmision()) {
-        printf("There is communication!\n");
-    } else {
-        printf("There is NO communication :(\n");
-    }
-    mpu6050_end_transmision();
-
-    mpu6050_request_from(ACCEL_XOUT_H);
-    vTaskDelay(10 / portTICK_RATE_MS);
-    
-    mpu6050_read(6, raw_packets);
-    mpu6050_end_transmision();
-
-    for(int i = 0; i < 3; i++) {
-        raw_data[i] =  raw_packets[2*i] << 8;
-        raw_data[i] |= raw_packets[2*i + 1];
-    }
-
-    printf("X: %d\r\nY: %d\r\nZ: %d\r\n",
-              raw_data[0],
-              raw_data[1],
-              raw_data[2]);
-}
-

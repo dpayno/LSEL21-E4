@@ -40,14 +40,10 @@
 #define PWR_MGMT_1      0x6B
 #define WHO_AM_I        0x75
 
-void mpu6050_i2c_init();
+int32_t mpu6050_i2c_init();
 
-bool mpu6050_begin_transmision();
-void mpu6050_end_transmision();
+int32_t mpu6050_i2c_write(uint8_t register, uint8_t* data, uint8_t length);
 
-bool mpu6050_write(uint8_t i2c_data);
-
-bool mpu6050_request_from(uint8_t i2c_addr);
-bool mpu6050_read(uint8_t num_bytes, int8_t* data);
+int32_t mpu6050_i2c_read(uint8_t *data, uint16_t length);
 
 #endif // _MPU6050_driver_H
