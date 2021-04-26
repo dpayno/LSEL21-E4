@@ -1,23 +1,15 @@
 #include "esp_common.h"
 #include "freertos/task.h"
+#include "i2c_master.h"
 #include "gpio.h"
-#include "esp_wifi_station_module.h"
+#include "fsm.h"
+#include "fsm_hit_detection.h"
+#include "accelerometer.h"
 
-#define ap_name        "monde38"
-#define ap_password    "monde.38"
+#define HIT_THRESHOLD_HARD 0xFFFF >> 2
+#define HIT_THRESHOLD_SOFT 0xFFFF >> 3
+#define HIT_RATE 100
 
-/******************************************************************************
- * FunctionName : user_rf_cal_sector_set
- * Description  : SDK just reversed 4 sectors, used for rf init data and paramters.
- *                We add this function to force users to set rf cal sector, since
- *                we don't know which sector is free in user's application.
- *                sector map for last several sectors : ABCCC
- *                A : rf cal
- *                B : rf init data
- *                C : sdk parameters
- * Parameters   : none
- * Returns      : rf cal sector
-*******************************************************************************/
 uint32 user_rf_cal_sector_set(void)
 {
     flash_size_map size_map = system_get_flash_size_map();
@@ -49,19 +41,29 @@ uint32 user_rf_cal_sector_set(void)
     return rf_cal_sec;
 }
 
-void task_blink(void* ignore)
-{   
+void task_hit_detection(void* ignore)
+{
+    int active = 1;
+    fsm_hit_detection_t  accel_1;
+    accel_threshold_t hard_threshold;
+    accel_threshold_t soft_threshold;
 
-    esp_wifi_station_module mod;
-    init_module_station( &mod, ap_name, ap_password);
-    connect_to_ap();
-    while(true) {}
+    hard_threshold.x = HIT_THRESHOLD_HARD;
+    hard_threshold.y = HIT_THRESHOLD_HARD;
+    hard_threshold.z = HIT_THRESHOLD_HARD;
 
+    soft_threshold.x = HIT_THRESHOLD_SOFT;
+    soft_threshold.y = HIT_THRESHOLD_SOFT;
+    soft_threshold.z = HIT_THRESHOLD_SOFT;
 
+    fsm_hit_detection_init(&accel_1, hard_threshold, soft_threshold, HIT_RATE, I2C_MASTER_SCL_GPIO, I2C_MASTER_SDA_GPIO);
+    fsm_hit_detection_set_active(&accel_1, active);
+
+    while (1) {
+        fsm_fire((fsm_t*)&accel_1);
+    }
     vTaskDelete(NULL);
 }
-
-
 
 /******************************************************************************
  * FunctionName : user_init
@@ -71,5 +73,5 @@ void task_blink(void* ignore)
 *******************************************************************************/
 void user_init(void)
 {
-    xTaskCreate(&task_blink, "startup", 2048, NULL, 1, NULL);
+    xTaskCreate(&task_hit_detection, "startup", 2048, NULL, 1, NULL);
 }
