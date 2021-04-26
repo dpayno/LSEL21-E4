@@ -1,17 +1,15 @@
 #ifndef ESP_WIFI_STATION_MODULE_H
 #define ESP_WIFI_STATION_MODULE_H
 
-#include "esp_sta.h"
-#include "esp_wifi.h"
+#include "c_types.h"
 #include <string.h>
+#include "lwip/ip_addr.h"
+#include "esp_wifi.h"
+#include "esp_sta.h"
 
-
-typedef struct esp_wifi_station_module{
-
-    struct station_config esp;
-}esp_wifi_station_module;
-
-
+typedef struct esp_wifi_station_module {
+  struct station_config esp;
+} esp_wifi_station_module;
 
 /**
   * @brief  Initialize WiFi connection betwen a ESP8266 in station mode and an AP. Make sure initialize a WiFi Station Module first.
@@ -22,14 +20,7 @@ typedef struct esp_wifi_station_module{
   *
   * @return    void             
   */
-void init_module_station(esp_wifi_station_module* mod, char* ssid, char* password){
-
-    wifi_set_opmode_current(STATION_MODE);
-    strcpy((char*)(mod->esp.ssid), ssid);
-    strcpy((char*)(mod->esp.password), password);
-    wifi_station_set_config_current(&(mod->esp));
-}
-
+void init_module_station(esp_wifi_station_module* mod, char* ssid, char* password);
 
 /**
   * @brief  Make connection with AP
@@ -38,8 +29,7 @@ void init_module_station(esp_wifi_station_module* mod, char* ssid, char* passwor
   *
   * @return    void
   */
-void connect_to_ap(void) {wifi_station_connect();}
-
+void connect_to_ap(void);
 
 /**
   * @brief  Check if connection is ok.
@@ -49,9 +39,7 @@ void connect_to_ap(void) {wifi_station_connect();}
   * @return    true  : connected
   * @return    false : not connected 
   */
-bool station_connected(void) {if (wifi_station_get_connect_status() == STATION_GOT_IP) return 1; else return 0;}
-
-
+bool station_connected(void);
 
 /**
   * @brief  Check if operation modeis correct.
@@ -61,8 +49,6 @@ bool station_connected(void) {if (wifi_station_get_connect_status() == STATION_G
   * @return    true  : correct
   * @return    false : not correct 
   */
-bool check_station_operation_mode(void) {if(wifi_get_opmode_default() == STATION_MODE) return 1; else return 0;}
-
-
+bool check_station_operation_mode(void);
 
 #endif 
