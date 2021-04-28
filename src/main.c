@@ -1,15 +1,21 @@
 #include "esp_common.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "i2c_master.h"
-#include "gpio.h"
-#include "fsm.h"
-#include "fsm_hit_detection.h"
-#include "accelerometer.h"
+#include "freertos/queue.h"
 
-#define HIT_THRESHOLD_HARD 0xFFFF >> 2
-#define HIT_THRESHOLD_SOFT 0xFFFF >> 3
-#define HIT_RATE 100
+#include "gpio.h"
+#include "esp_wifi_station_module.h"
+#include "MQTTClient.h"
+#include "fsm_send_data.h"
+#include "fsm_door_checking.h"
+#include "fsm_hit_detection.h"
+#include "fsm_led_alarm.h"
+
+
+
+#define AP_SSID     "vodafone8C84"
+#define AP_PASSWORD "XXXX"
+
 
 uint32 user_rf_cal_sector_set(void)
 {
@@ -45,23 +51,23 @@ uint32 user_rf_cal_sector_set(void)
 void task_hit_detection(void* ignore)
 {
     int active = 1;
-    fsm_hit_detection_t  accel_1;
-    accel_threshold_t hard_threshold;
-    accel_threshold_t soft_threshold;
-
-    hard_threshold.x = HIT_THRESHOLD_HARD;
-    hard_threshold.y = HIT_THRESHOLD_HARD;
-    hard_threshold.z = HIT_THRESHOLD_HARD;
-
-    soft_threshold.x = HIT_THRESHOLD_SOFT;
-    soft_threshold.y = HIT_THRESHOLD_SOFT;
-    soft_threshold.z = HIT_THRESHOLD_SOFT;
-
-    fsm_hit_detection_init(&accel_1, hard_threshold, soft_threshold, HIT_RATE, I2C_MASTER_SCL_GPIO, I2C_MASTER_SDA_GPIO);
-    fsm_hit_detection_set_active(&accel_1, active);
-
+    fsm_hit_detection_t  accel_1[1];
+    fsm_led_alarm_t leds[2];
+    fsm_led_alarm_init(&leds[0], D4, 100);
+    fsm_led_alarm_init(&leds[1], D4, 500);
+    fsm_door_checking_t door[1];
+    fsm_send_data_t send;
+    
+    fsm_send_data_init(&send, 100, leds, 2, door, 1, accel_1, 1 );
+    fsm_send_data_set_active(&send, 1);
     while (1) {
-        fsm_fire((fsm_t*)&accel_1);
+        fsm_fire((fsm_t*)&send);
+        fsm_fire((fsm_t*)&leds[0]);
+        fsm_fire((fsm_t*)&leds[1]);
+        
+        
+        
+
     }
     vTaskDelete(NULL);
 }
