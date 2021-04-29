@@ -4,7 +4,6 @@
 #include "freertos/queue.h"
 
 #include "gpio.h"
-#include "esp_wifi_station_module.h"
 #include "MQTTClient.h"
 #include "fsm_send_data.h"
 #include "fsm_door_checking.h"
@@ -12,10 +11,7 @@
 #include "fsm_led_alarm.h"
 
 
-
-#define AP_SSID     "vodafone8C84"
-#define AP_PASSWORD "XXXX"
-
+int global_active = 0;
 
 uint32 user_rf_cal_sector_set(void)
 {
@@ -48,29 +44,86 @@ uint32 user_rf_cal_sector_set(void)
     return rf_cal_sec;
 }
 
+
+
+void messageArrived(MessageData* data)
+{
+    if (data->message->payload == "ACTIVATE_SYSTEM")
+    {
+        global_active = 1;
+    }
+    else if (data->message->payload == "DISABLE_SYSTEM")
+    {
+        global_active = 0;
+    }
+}
+
+
 void task_hit_detection(void* ignore)
 {
+
+
+    
     int active = 1;
     fsm_hit_detection_t  accel_1[1];
     fsm_led_alarm_t leds[2];
     fsm_led_alarm_init(&leds[0], D4, 100);
     fsm_led_alarm_init(&leds[1], D4, 500);
     fsm_door_checking_t door[1];
-    fsm_send_data_t send;
-    
+    fsm_send_data_t send;    
     fsm_send_data_init(&send, 100, leds, 2, door, 1, accel_1, 1 );
-    fsm_send_data_set_active(&send, 1);
-    while (1) {
-        fsm_fire((fsm_t*)&send);
-        fsm_fire((fsm_t*)&leds[0]);
-        fsm_fire((fsm_t*)&leds[1]);
-        
-        
-        
+    
 
+/********************************************************* ESTO NO SE HA PROBADO***************************************/
+	Network network;
+	unsigned char sendbuf[80], readbuf[80];
+	int rc = 0,
+	count = 0;
+	MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
+
+	//pvParameters = 0;
+	NetworkInit(&network);
+	MQTTClientInit(&(send.client), &network, 30000, sendbuf, sizeof(sendbuf), readbuf, sizeof(readbuf));
+
+	char* address = "192.168.0.36"; 
+	if ((rc = ConnectNetwork(&network, address, 8883)) != 0)
+		printf("Return code from network connect is %d\n", rc);
+
+#if defined(MQTT_TASK)
+	if ((rc = MQTTStartTask(&(send.client)) != pdPASS))
+		printf("Return code from start tasks is %d\n", rc);
+#endif
+
+	connectData.MQTTVersion = 3;
+	connectData.clientID.cstring = "FreeRTOS_sample";
+
+	if ((rc = MQTTConnect(&(send.client), &connectData)) != 0)
+		printf("Return code from MQTT connect is %d\n", rc);
+	else
+		printf("MQTT Connected\n");
+
+	if ((rc = MQTTSubscribe(&(send.client), "alarm_status/#", 2, messageArrived)) != 0)
+		printf("Return code from MQTT subscribe is %d\n", rc);
+/********************************************************* ESTO NO SE HA PROBADO***************************************/
+
+    /*fsm_send_data_set_active(&send, 1);*/
+    while (1) {
+        if (global_active)
+        {
+          fsm_send_data_set_active(&send, 1);
+        }
+        else if (!global_active)
+        {
+          fsm_send_data_set_active(&send, 0);
+        }
+        
+    fsm_fire((fsm_t*)&send);
+    fsm_fire((fsm_t*)&leds[0]);
+    fsm_fire((fsm_t*)&leds[1]);
     }
     vTaskDelete(NULL);
 }
+
 
 /******************************************************************************
  * FunctionName : user_init
