@@ -1,12 +1,16 @@
 #ifndef FSM_SEND_DATA_H
 #define FSM_SEND_DATA_H
 
+#include <stddef.h>
+#include <stdio.h>
+#include <stdint.h>
 #include "fsm.h"
 #include "timer.h"
-#include <stdint.h>
 #include "fsm_hit_detection.h"
 #include "fsm_door_checking.h"
 #include "fsm_led_alarm.h"
+#include "MQTTClient.h"
+#include "cJSON.h"
 
 enum fsm_send_data_state {
   IDLE,
@@ -19,6 +23,7 @@ typedef struct
   uint8_t  active       ;
   uint16_t sampling_ms  ;
   uint16_t timeout      ;
+  MQTTClient      client;
 
   fsm_hit_detection_t fsm_hit[N_ACCEL];
   uint8_t n_accel;
