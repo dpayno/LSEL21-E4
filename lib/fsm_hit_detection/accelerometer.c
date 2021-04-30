@@ -31,7 +31,7 @@ typedef struct
 static flags_and_data_accel_t flags_and_data_accel[N_ACCEL];
 static uint8_t m_u8_index = 0;
 
-uint8_t get_new_index ()
+uint8_t accel_get_new_index ()
 {
   flags_and_data_accel[m_u8_index].flags_accel.data = 0x00;
   flags_and_data_accel[m_u8_index].timeout = 0;

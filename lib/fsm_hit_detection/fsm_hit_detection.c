@@ -33,7 +33,7 @@ static fsm_trans_t tabla_trans[] = {
 void fsm_hit_detection_init(fsm_hit_detection_t* this, accel_threshold_t hard, accel_threshold_t soft, uint16_t sampling, uint8_t pin_SLC, uint8_t pin_SDA)
 {
     fsm_init ((fsm_t *) this, tabla_trans);
-    this->u8_index = get_new_index();
+    this->u8_index = accel_get_new_index();
     accel_set_thresholds( this->u8_index, hard, soft);
     accel_set_pins( this->u8_index, pin_SDA, pin_SLC);
     accel_set_sampling( this->u8_index, ms_into_ticks(sampling));
