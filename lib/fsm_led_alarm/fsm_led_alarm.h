@@ -3,6 +3,7 @@
 
 #include "fsm.h"
 #include <stdint.h>
+#include "led.h"
 
 //--------------------FSM_led_alarm States----------------------------
 enum led_alarm_state {

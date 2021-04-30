@@ -14,7 +14,7 @@ typedef struct accel_threshold_t {
   uint16_t z;
 } accel_threshold_t;
 
-uint8_t get_new_index ();
+uint8_t accel_get_new_index ();
 void accel_set_thresholds ( uint8_t index, accel_threshold_t hard, accel_threshold_t soft);
 
 void accel_set_pins ( uint8_t index, uint8_t pin_SDA, uint8_t pin_SCL );

@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "timer.h"
-#include "led.h"
 
 //-------funciones de guarda para realizar las transiciones y delcaracion de entradas-----------
 static int  is_flag_active (fsm_t* this)
