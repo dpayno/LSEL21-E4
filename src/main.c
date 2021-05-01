@@ -13,7 +13,7 @@
 #include "mqtt_hal.h"
 
 #define AP_SSID     "Repetidor_Buhardilla"
-#define AP_PASSWORD "ironMan6633"
+#define AP_PASSWORD "XXXX"
 
 uint32 user_rf_cal_sector_set(void)
 {
