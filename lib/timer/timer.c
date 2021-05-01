@@ -1,5 +1,8 @@
 #include "timer.h"
 
+#include "esp_common.h"
+#include "freertos/task.h"
+
 uint32_t get_tick_count () 
 {
     return xTaskGetTickCount();

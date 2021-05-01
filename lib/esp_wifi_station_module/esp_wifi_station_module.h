@@ -2,14 +2,13 @@
 #define ESP_WIFI_STATION_MODULE_H
 
 #include "c_types.h"
-#include <string.h>
 #include "lwip/ip_addr.h"
 #include "esp_wifi.h"
 #include "esp_sta.h"
 
-typedef struct esp_wifi_station_module {
+typedef struct esp_wifi_station_t {
   struct station_config esp;
-} esp_wifi_station_module;
+} esp_wifi_station_t;
 
 /**
   * @brief  Initialize WiFi connection betwen a ESP8266 in station mode and an AP. Make sure initialize a WiFi Station Module first.
@@ -18,9 +17,9 @@ typedef struct esp_wifi_station_module {
   * @param     char*  ssid                        : AP name.
   * @param     char*  password                    : AP password name.
   *
-  * @return    void             
+  * @return    void
   */
-void init_module_station(esp_wifi_station_module* mod, char* ssid, char* password);
+void esp_wsm_init_module_station(esp_wifi_station_t* mod, char* ssid, char* password);
 
 /**
   * @brief  Make connection with AP
@@ -29,7 +28,7 @@ void init_module_station(esp_wifi_station_module* mod, char* ssid, char* passwor
   *
   * @return    void
   */
-void connect_to_ap(void);
+void esp_wsm_connect_to_ap(void);
 
 /**
   * @brief  Check if connection is ok.
@@ -39,7 +38,7 @@ void connect_to_ap(void);
   * @return    true  : connected
   * @return    false : not connected 
   */
-bool station_connected(void);
+bool esp_wsm_station_connected(void);
 
 /**
   * @brief  Check if operation modeis correct.
@@ -49,6 +48,6 @@ bool station_connected(void);
   * @return    true  : correct
   * @return    false : not correct 
   */
-bool check_station_operation_mode(void);
+bool esp_wsm_check_station_operation_mode(void);
 
-#endif 
+#endif // ESP_WIFI_STATION_MODULE_H

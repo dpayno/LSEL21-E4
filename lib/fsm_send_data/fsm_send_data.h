@@ -28,7 +28,7 @@ typedef struct
   fsm_hit_detection_t fsm_hit[N_ACCEL];
   uint8_t n_accel;
   
-  fsm_door_checking_t fsm_door[NDoors];
+  fsm_door_checking_t fsm_door[N_DOORS];
   uint8_t n_doors;
   
   fsm_led_alarm_t       fsm_led[NLeds];

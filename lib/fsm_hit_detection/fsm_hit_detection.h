@@ -11,8 +11,7 @@ enum accel_state {
   ACCEL_ON_RUN,
 };
 
-typedef struct
-{
+typedef struct {
   fsm_t fsm_hit_detection;
   uint8_t u8_index;
 } fsm_hit_detection_t;
