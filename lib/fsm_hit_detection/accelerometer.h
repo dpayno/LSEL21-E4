@@ -36,6 +36,7 @@ void accel_set_sampling ( uint8_t index, uint16_t val);
 uint16_t accel_get_sampling ( uint16_t index );
 
 void accel_set_accel_xyz (uint8_t index, uint16_t accel_x, uint16_t accel_y, uint16_t accel_z);
+void accel_get_accel_xyz (uint8_t index, uint16_t* accel_x, uint16_t* accel_y, uint16_t* accel_z);
 uint8_t accel_check_accel_xyz ( uint8_t index );
 
 

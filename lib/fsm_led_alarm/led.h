@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define NLeds 2
+#define N_LEDS 2
 
 uint8_t led_get_new_index ();
 

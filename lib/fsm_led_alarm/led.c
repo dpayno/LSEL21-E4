@@ -19,7 +19,7 @@ typedef struct
 }flags_and_data_leds_t;
 
 
-static flags_and_data_leds_t data_leds[NLeds];
+static flags_and_data_leds_t data_leds[N_LEDS];
 static uint8_t m_u8_index = 0;
 
 uint8_t led_get_new_index ()

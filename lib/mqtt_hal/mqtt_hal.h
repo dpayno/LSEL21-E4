@@ -2,8 +2,9 @@
 #define _MQTT_HAL_H
 
 #include "MQTTClient.h"
+#include "fsm_send_data.h"
 
-void mqtt_hal_init(MQTTClient* client, int port, char* broker_addr, char* client_id);
+void mqtt_hal_init(MQTTClient* client, int port, char* broker_addr, char* client_id, fsm_send_data_t* fsm_send);
 
 void mqtt_hal_suscribe(MQTTClient* client, char* topic);
 

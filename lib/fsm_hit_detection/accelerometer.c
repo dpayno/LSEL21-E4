@@ -127,6 +127,13 @@ void accel_set_accel_xyz (uint8_t index, uint16_t accel_x, uint16_t accel_y, uin
     flags_and_data_accel[index].accel_z_now = accel_z;
 }
 
+void accel_get_accel_xyz (uint8_t index, uint16_t* accel_x, uint16_t* accel_y, uint16_t* accel_z)
+{
+    *accel_x = flags_and_data_accel[index].accel_x_now;
+    *accel_y = flags_and_data_accel[index].accel_y_now;
+    *accel_z = flags_and_data_accel[index].accel_z_now;
+}
+
 
 uint8_t accel_check_accel_hard_xyz ( uint8_t index )
 {

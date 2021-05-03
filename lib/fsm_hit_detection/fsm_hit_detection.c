@@ -136,3 +136,8 @@ void fsm_hit_detection_set_active (fsm_hit_detection_t* this, uint8_t val)
 {
     accel_set_active(this->u8_index, val);    
 }
+
+void fsm_hit_detection_get_xyz (fsm_hit_detection_t* this, uint16_t* x, uint16_t* y, uint16_t* z)
+{
+    accel_get_accel_xyz (this->u8_index, x, y, z);
+}

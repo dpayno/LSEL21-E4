@@ -1,22 +1,42 @@
 #include "mqtt_hal.h"
+#include "cJSON.h"
+#include <stdlib.h>
 
 static Network network;
-static unsigned char sendbuf[80], readbuf[80];
+static unsigned char sendbuf[512], readbuf[128];
 static int rc = 0;
 static MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
+static int count = 0;
+static fsm_send_data_t* p_fsm_send;
 
 void mqtt_message_arrived(MessageData* data)
 {
+    // Get RAW MQTT message
     int len = (int)data->message->payloadlen;
     char rx_msg[len];
     memcpy(rx_msg, data->message->payload, len);
-    printf("Received msg: %s\n", rx_msg);
-    printf("Size of data: %d\n",(int)data->message->payloadlen );
-    // fsm_send_data_set_active(&fsm_send, 1);
+    // Parse message to JSON
+    cJSON* rx_json = cJSON_Parse(rx_msg);
+    // Check if it's a JSON message
+    if (!rx_json) {
+        printf("Error before: [%s]\n", cJSON_GetErrorPtr());
+    } else {
+        // Obtain "active" value & convert to integer
+        cJSON* active_json = cJSON_GetObjectItem(rx_json, "active");
+        char* active_str = cJSON_Print(active_json);
+        printf("New active value: %s\n", active_str);
+        int active_int = atoi(active_str);
+        // Free memory
+        cJSON_Delete(rx_json);
+        os_free(active_str);
+        // Active / deactive system
+        fsm_send_data_set_active(p_fsm_send, active_int);
+    }
 }
 
-void mqtt_hal_init(MQTTClient* client, int port, char* broker_addr, char* client_id)
+void mqtt_hal_init(MQTTClient* client, int port, char* broker_addr, char* client_id, fsm_send_data_t* fsm_send)
 {
+    p_fsm_send = fsm_send;
     NetworkInit(&network);
     MQTTClientInit(client, &network, 30000, sendbuf, sizeof(sendbuf), readbuf, sizeof(readbuf));
 
@@ -47,9 +67,11 @@ void mqtt_hal_publish(MQTTClient* client, char* topic, char* payload)
     message.payload = payload;
     message.payloadlen = strlen(payload);
 
-    if ((rc = MQTTPublish(client, topic, &message)) != 0)
+    if ((rc = MQTTPublish(client, topic, &message)) != 0) {
         printf("Return code from MQTT publish is %d\n", rc);
-
+    } else {
+        printf("Sensor data sent! Count: %d\n", count++);
+    }
     if ((rc = MQTTYield(client, 1000)) != 0)
         printf("Return code from yield is %d\n", rc);
 }
