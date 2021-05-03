@@ -1,6 +1,6 @@
 #include "mqtt_hal.h"
-#include "cJSON.h"
 #include <stdlib.h>
+#include "cJSON.h"
 
 static Network network;
 static unsigned char sendbuf[512], readbuf[128];
@@ -49,7 +49,7 @@ void mqtt_hal_init(MQTTClient* client, int port, char* broker_addr, char* client
     if ((rc = MQTTConnect(client, &connectData)) != 0)
         printf("Return code from MQTT connect is %d\n", rc);
     else
-        printf("MQTT Connected\n");
+        printf("Connected to MQTT broker.\n");
 }
 
 void mqtt_hal_suscribe(MQTTClient* client, char* topic)

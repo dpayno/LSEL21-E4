@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-uint32_t get_tick_count ();
+uint32_t timer_get_tick_count ();
 
-uint32_t ms_into_ticks (uint32_t);
+uint32_t timer_ms_to_ticks (uint32_t val);
 
 #endif // _TIMER_H

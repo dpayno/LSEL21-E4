@@ -16,7 +16,7 @@ typedef struct {
   uint8_t u8_index;
 } fsm_hit_detection_t;
 
-void fsm_hit_detection_init(fsm_hit_detection_t* this, accel_threshold_t hard, accel_threshold_t soft, uint16_t sampling, uint8_t pin_SLC, uint8_t pin_SDA);
+void fsm_hit_detection_init(fsm_hit_detection_t* this, accel_threshold_t hard, accel_threshold_t soft, uint32_t sampling, uint8_t pin_SLC, uint8_t pin_SDA);
 int fsm_hit_detection_alarm (fsm_hit_detection_t* this);
 void fsm_hit_detection_set_active (fsm_hit_detection_t* this, uint8_t val);
 

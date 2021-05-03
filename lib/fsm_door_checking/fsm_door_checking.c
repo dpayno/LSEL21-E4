@@ -23,26 +23,26 @@ static fsm_trans_t door_trans[] = {
 static int is_active_and_door_open (fsm_t* this)
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
-	return ( is_active(fp->u8_index) && is_door_open(fp->u8_index) ); 
+	return ( door_is_active(fp->u8_index) && door_is_door_open(fp->u8_index) ); 
 }
 
 static int is_not_active (fsm_t* this) 
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
-	return ! is_active(fp->u8_index); 
+	return ! door_is_active(fp->u8_index); 
 }
 
 static void set_door_flag (fsm_t* this)
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
-  	set_flag_door_open (fp->u8_index, 1);
-  
+	door_set_flag_door_open (fp->u8_index, 1);
+	printf("Door opened!\n");
 }
 
 static void clear_door_flag (fsm_t* this)
 {
 	fsm_door_checking_t * fp = (fsm_door_checking_t*)this;
-  	set_flag_door_open (fp->u8_index, 0);
+  	door_set_flag_door_open (fp->u8_index, 0);
 }
 
 /* Funciones públicas ********************************************************/

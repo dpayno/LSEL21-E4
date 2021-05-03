@@ -15,7 +15,7 @@ typedef struct
 {
   flags_led_t flags_led;
   uint32_t next_timeout;
-  uint16_t blink_in_ticks;
+  uint32_t blink_in_ticks;
 }flags_and_data_leds_t;
 
 
@@ -57,12 +57,12 @@ uint32_t led_get_current_timeout (uint8_t index)
   return data_leds[index].next_timeout;
 }
 
-void led_set_blink_time (uint8_t index, uint16_t blink_time)
+void led_set_blink_time (uint8_t index, uint32_t blink_time)
 {
   data_leds[index].blink_in_ticks = blink_time;
 }
 
-uint16_t led_get_blink_time (uint8_t index)
+uint32_t led_get_blink_time (uint8_t index)
 {
   return data_leds[index].blink_in_ticks;
 }

@@ -16,8 +16,8 @@ typedef union {
 typedef struct 
 {
   flags_accel_t flags_accel;
-  uint16_t timeout;
-  uint16_t sampling_ms;
+  uint32_t timeout;
+  uint32_t sampling_ms;
   accel_threshold_t threshold_hard;
   accel_threshold_t threshold_soft;
   uint16_t accel_x_now;
@@ -63,12 +63,12 @@ int8_t accel_get_pins ( uint8_t index, uint8_t* pin_SDA, uint8_t* pin_SCL )
     return 0;
 }
 
-void accel_set_timeout ( uint8_t index, uint16_t val)
+void accel_set_timeout ( uint8_t index, uint32_t val)
 {
     flags_and_data_accel[index].timeout = val;
 }
 
-uint16_t accel_get_timeout (uint8_t index)
+uint32_t accel_get_timeout (uint8_t index)
 {
     return flags_and_data_accel[index].timeout;
 }
@@ -106,12 +106,12 @@ uint8_t accel_get_flag_movement (uint8_t index)
 }
 
 
-void accel_set_sampling ( uint8_t index, uint16_t val)
+void accel_set_sampling ( uint8_t index, uint32_t val)
 {
     flags_and_data_accel[index].sampling_ms = val;
 }
 
-uint16_t accel_get_sampling ( uint16_t index )
+uint32_t accel_get_sampling ( uint8_t index )
 {
     return flags_and_data_accel[index].sampling_ms;
 }

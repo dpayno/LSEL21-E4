@@ -2,7 +2,7 @@
 #include "esp_wifi_station_module.h"
 #include "cJSON.h"
 
-#define MQTT_PUBLISH_TOPIC "sensor_data"
+#define MQTT_PUBLISH_TOPIC  "sensor_data"
 
 /* Definición funciones privadas *********************************************/
 // Funciones de guarda
@@ -32,7 +32,7 @@ static int is_active_system(fsm_t* this)
 static int is_timeout(fsm_t* this)
 {
     fsm_send_data_t *f = (fsm_send_data_t*) this;
-    return ((get_tick_count() >= f->timeout) && f->active);
+    return ((timer_get_tick_count() >= f->timeout) && f->active);
 }
 
 
@@ -56,7 +56,7 @@ static void activate_system(fsm_t* this)
         fsm_door_checking_turn_on_off_active (&(f->fsm_door[i]), 1); 
     }
 
-    f->timeout = get_tick_count() + f->sampling_ms; /*INIT TIMER*/
+    f->timeout = timer_get_tick_count() + f->sampling_rate; /*INIT TIMER*/
 }
 
 static void send_data(fsm_t* this)
@@ -107,9 +107,9 @@ static void send_data(fsm_t* this)
         cJSON_AddStringToObject(movement_item, "status", is_active_system(this) ? "on" : "off");
         cJSON_AddStringToObject(movement_item, "movement", accel_get_flag_movement (i) ? "yes" : "no");
         fsm_hit_detection_get_xyz(&(f->fsm_hit[i]), &x, &y, &z);
-        cJSON_AddNumberToObject(movement_item, "x", (int)x);
-        cJSON_AddNumberToObject(movement_item, "y", (int)y);
-        cJSON_AddNumberToObject(movement_item, "z", (int)z);
+        cJSON_AddNumberToObject(movement_item, "x", (uint16_t)x);
+        cJSON_AddNumberToObject(movement_item, "y", (uint16_t)y);
+        cJSON_AddNumberToObject(movement_item, "z", (uint16_t)z);
     }
 
     //LIGHT
@@ -127,7 +127,7 @@ static void send_data(fsm_t* this)
     // printf("%s\n", json_data);
 
     mqtt_hal_publish(&(f->client), MQTT_PUBLISH_TOPIC, json_data);
-    f->timeout = get_tick_count() + f->sampling_ms;
+    f->timeout = timer_get_tick_count() + f->sampling_rate;
 
     cJSON_Delete(root);
     cJSON_Delete(door);
@@ -153,14 +153,15 @@ static void disable_system(fsm_t* this)
 }
 
 /* Funciones públicas ********************************************************/
-void fsm_send_data_init(fsm_send_data_t* this, uint16_t sampling_ms, fsm_led_alarm_t fsm_led[], uint8_t n_leds, fsm_door_checking_t fsm_door[], uint8_t n_doors, fsm_hit_detection_t fsm_hit[], uint8_t n_accel)
+void fsm_send_data_init(fsm_send_data_t* this, uint32_t sampling_ms, fsm_led_alarm_t fsm_led[], uint8_t n_leds, fsm_door_checking_t fsm_door[], uint8_t n_doors, fsm_hit_detection_t fsm_hit[], uint8_t n_accel)
 {
     fsm_init ((fsm_t *) this, tabla_trans);
-    this->sampling_ms = sampling_ms;
+    this->sampling_rate = timer_ms_to_ticks(sampling_ms);
     this->timeout = 0;
     this->n_leds = n_leds;
     this->n_accel = n_accel;
     this->n_doors = n_doors;
+    this->active = 0;
 
     for (int i = 0; i < this->n_leds; i++) {
         this->fsm_led[i] = fsm_led[i];
