@@ -1,14 +1,14 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
-#define AP_SSID               "vodafone8C84"
-#define AP_PASSWORD           "ironMan6633"
+#define AP_SSID               "your_wifi"
+#define AP_PASSWORD           "your_password"
 
 #define MQTT_BROKER           "192.168.0.110"
 #define MQTT_CLIENT           "esp8266_client_example"
 #define MQTT_PORT             8883
 #define MQTT_SUSCRIBE_TOPIC   "alarm_status"
-#define MQTT_SEND_RATE_MS     30000UL
+#define MQTT_SEND_RATE_MS     10000UL
 
 #define LED_ALARM_RATE_MS     500UL
 #define LED_ALARM_PIN         D1
