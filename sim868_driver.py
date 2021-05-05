@@ -1,6 +1,7 @@
 import serial
 import os, time
 import json
+import re
 
 from random import randrange 
 import RPi.GPIO as GPIO
@@ -42,6 +43,7 @@ class SIM868:
         self.GPS_satellites = 0 # [0,99]
         self.GNSS_satellites = 0    # [0,99]
         self.Signal = 0.0         # %      max = 55 dBHz
+        self.gps_data = 0
         
         # Imself.__port config data
         with open('config.json') as file:
@@ -58,10 +60,13 @@ class SIM868:
         # Setup
         self.__power_pin_init()
         self.__init_gsm()
+        self.__init_gps()
 
 
+    ##############################################################
     # FUNCIONES CONFIGURACION
-
+    ##############################################################
+    
     def __power_pin_init(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.Power_pin, GPIO.OUT)
@@ -95,11 +100,14 @@ class SIM868:
             return 0
         else:
             return 1
-    
+        
+    ##############################################################
     # FUNCIONES INIT GSM
+    ##############################################################
     
     def __init_gsm(self):
         
+        print("---------encendemos GSM---------")
         self.__port.write(str.encode('AT+CPIN=' + str(self.__PIN) + '\r\n'))  
         time.sleep(10) #seconds
         rcv = self.__port.read(256)
@@ -128,8 +136,22 @@ class SIM868:
         rcv = self.__port.read(256)
         print (rcv)
         
+    ##############################################################
+    # FUNCIONES INIT GPS
+    ##############################################################
+    
+    def __init_gps(self):
+        print("---------encendemos GPS---------")
+        self.__port.write(str.encode('AT+CGNSPWR=1'+'\r\n'))
+        time.sleep(2) #seconds
+        rcv = self.__port.read(4500)
+        print (rcv)
         
-    # GSM Methods
+    
+    ##############################################################
+    # FUNCIONES PUBLICAS
+    ##############################################################    
+    
     
     def gsm_read(self, url = None):
         
@@ -176,7 +198,15 @@ class SIM868:
         time.sleep(1) #seconds
         rcv = self.__port.read(128)
         print (rcv)
+
+    # GPS
+    def get_gps_data(self):
         
+        self.__port.write(str.encode('AT+CGNSINF'+'\r\n'))  # Select Message format as Text mode
+        time.sleep(5) #seconds
+        rcv = self.__port.read(256)
+        print (rcv)
+        self.gps_data = rcv
         
 # Iniciamos sim868   
 new_sim868 = SIM868(4)
@@ -184,32 +214,28 @@ new_sim868 = SIM868(4)
 #encendemos sim868
 new_sim868.power_on_board()
 
+# PRUEBAS GPS
+new_sim868.get_gps_data()
+
+
+# PRUEBAS GSM
+'''
 #leemos
 new_sim868.gsm_read('httpbin.org/get')
-
+'''
 #enviamos
-new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", "PRUEBA_BODY")
+new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", new_sim868.gps_data)
 
+
+'''
 #apagamos
 new_sim868.power_off_board()
 GPIO.cleanup()
-
+'''
 
 """
-self.__port.write(str.encode('AT'+'\r\n'))
-rcv = self.__port.read(4500)
-print (rcv)
-time.sleep(5) #seconds
 
-self.__port.write(str.encode('AT+CGNSPWR=1'+'\r\n'))
-rcv = self.__port.read(4500)
-print (rcv)
-time.sleep(5) #seconds
 
-self.__port.write(str.encode('AT+CGNSPWR?'+'\r\n'))
-rcv = self.__port.read(4500)
-print (rcv)
-time.sleep(5) #seconds
 
 
 for i in range(3):
