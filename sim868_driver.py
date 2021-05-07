@@ -29,21 +29,30 @@ class SIM868:
         self.Power_pin = pin
         
         # GPS
-        self.GNSS_status = 0
-        self.Fix_status = 0
-        self.UTC = ''           # yyyyMMddhhmmss.sss
-        self.Latitude = 0.0     # ±dd.dddddd            [-90.000000,90.000000]
-        self.Longitude = 0.0    # ±ddd.dddddd           [-180.000000,180.000000]
-        self.Altitude = 0.0     # in meters
-        self.Speed = 0.0        # km/h [0,999.99]
-        self.Course = 0.0       # degrees [0,360.00]
-        self.HDOP = 0.0         # [0,99.9]
-        self.PDOP = 0.0         # [0,99.9]
-        self.VDOP = 0.0         # [0,99.9]
-        self.GPS_satellites = 0 # [0,99]
-        self.GNSS_satellites = 0    # [0,99]
-        self.Signal = 0.0         # %      max = 55 dBHz
-        self.gps_data = 0
+        
+        self.gps_data = {
+            
+            'GNSS_status': 0,
+            'Fix_status': 0,
+            'UTC': '',            # yyyyMMddhhmmss.sss
+            'Latitude': 0.0,      # ±dd.dddddd            [-90.000000,90.000000]
+            'Longitude': 0.0,     # ±ddd.dddddd           [-180.000000,180.000000]
+            'Altitude': 0.0,      # in meters
+            'Speed': 0.0,         # km/h [0,999.99]
+            'Course': 0.0,        # degrees [0,360.00]
+            'Fix_Mode':0,
+            'Reserved1':'',
+            'HDOP': 0.0,          # [0,99.9]
+            'PDOP': 0.0,          # [0,99.9]
+            'VDOP': 0.0,          # [0,99.9]
+            'Reserved2':'',
+            'Gnss_satellites_view':0, # [0,99]
+            'Gnss_satellites_used':0, # [0,99]
+            'Reserved3': '',  
+            'C/N0_max': 0, 
+            'HPA': 0.0,
+            'VPA': 0
+        }
         
         # Imself.__port config data
         with open('config.json') as file:
@@ -61,7 +70,7 @@ class SIM868:
         self.__power_pin_init()
         self.power_on_board()
         self.__init_gsm()
-        self.__init_gps()
+        #self.__init_gps()
 
 
     ##############################################################
@@ -185,14 +194,14 @@ class SIM868:
         rcv = self.__port.read(128)
         print (rcv)
         
-
-        self.__port.write(str.encode('AT+HTTPDATA=2000,2000'+'\r\n'))  # Select Message format as Text mode
+        
+        self.__port.write(str.encode('AT+HTTPDATA='+str(len(body))+',5000'+'\r\n'))  # Select Message format as Text mode
         time.sleep(0.5) #seconds
         rcv = self.__port.read(128)
         print (rcv)
 
         self.__port.write(str.encode(str(body) + '\r\n'))  # Select Message format as Text mode
-        time.sleep(1.5) #seconds
+        time.sleep(4.5) #seconds
         rcv = self.__port.read(128)
         print (rcv)
         
@@ -207,15 +216,20 @@ class SIM868:
         self.__port.write(str.encode('AT+CGNSINF'+'\r\n'))  # Select Message format as Text mode
         time.sleep(5) #seconds
         rcv = self.__port.read(256)
-        print (rcv)
-        self.gps_data = rcv
-        return rcv
-        
+        rcv = str(rcv)
+        print(rcv)
+        gps_parameters = rcv[rcv.find("+CGNSINF:")+10:rcv.find("OK")].split(",")
+        gps_parameters = gps_parameters[:-1]
+        try:
+            i = 0
+            for elem in self.gps_data:
+                self.gps_data[elem]=gps_parameters[i]
+                i += 1
+            return self.gps_data
+        except:
+            return -1
 # Iniciamos sim868   
 new_sim868 = SIM868(4)
-
-#encendemos sim868
-new_sim868.power_on_board()
 
 # PRUEBAS GPS
 new_sim868.get_gps_data()
@@ -227,13 +241,18 @@ new_sim868.get_gps_data()
 new_sim868.gsm_read('httpbin.org/get')
 '''
 #enviamos
-new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", new_sim868.gps_data)
+new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", str(new_sim868.gps_data))
 
 '''
 #apagamos
 new_sim868.power_off_board()
 GPIO.cleanup()
 '''
-
-
+'''
+a = "b'AT+CGNSINF\r\r\n+CGNSINF: 1,0,19800105235944.000,,,,0.00,0.0,0,,,,,,0,0,,,,,\r\n\r\nOK\r\n'"
+#print a
+print (a.find("+CGNSINF:"))
+b = a[a.find("+CGNSINF:")+10:a.find("\r\n\r\nOK\r\n'")]
+print (b.split(","))
+'''
 
