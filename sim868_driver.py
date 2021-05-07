@@ -59,6 +59,7 @@ class SIM868:
 
         # Setup
         self.__power_pin_init()
+        self.power_on_board()
         self.__init_gsm()
         self.__init_gps()
 
@@ -169,6 +170,7 @@ class SIM868:
         time.sleep(5) #seconds
         rcv = self.__port.read(4500)
         print (rcv)
+        return rcv
     
     
     def gsm_post(self, url = None, headers = None, body = None):
@@ -207,6 +209,7 @@ class SIM868:
         rcv = self.__port.read(256)
         print (rcv)
         self.gps_data = rcv
+        return rcv
         
 # Iniciamos sim868   
 new_sim868 = SIM868(4)
@@ -226,23 +229,11 @@ new_sim868.gsm_read('httpbin.org/get')
 #enviamos
 new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", new_sim868.gps_data)
 
-
 '''
 #apagamos
 new_sim868.power_off_board()
 GPIO.cleanup()
 '''
 
-"""
-
-
-
-
-for i in range(3):
-	self.__port.write(str.encode('AT+CGNSINF'+'\r\n'))
-	rcv = self.__port.read(4500)
-	print (rcv)
-	time.sleep(20) #seconds
-"""
 
 
