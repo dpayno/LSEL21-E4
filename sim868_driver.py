@@ -248,11 +248,5 @@ new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", str(ne
 new_sim868.power_off_board()
 GPIO.cleanup()
 '''
-'''
-a = "b'AT+CGNSINF\r\r\n+CGNSINF: 1,0,19800105235944.000,,,,0.00,0.0,0,,,,,,0,0,,,,,\r\n\r\nOK\r\n'"
-#print a
-print (a.find("+CGNSINF:"))
-b = a[a.find("+CGNSINF:")+10:a.find("\r\n\r\nOK\r\n'")]
-print (b.split(","))
-'''
+
 
