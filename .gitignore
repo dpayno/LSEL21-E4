@@ -1,3 +1,4 @@
+
 build/
 .pio
 .vscode/.browse.c_cpp.db*
@@ -5,4 +6,6 @@ build/
 .vscode/launch.json
 .vscode/ipch
 __pycache__/
+
+sim868_driver/config.json
 
