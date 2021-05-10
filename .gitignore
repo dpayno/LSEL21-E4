@@ -5,6 +5,5 @@ build/
 .vscode/launch.json
 .vscode/ipch
 __pycache__/
-sim868_driver/config.json
 *.pyc
 

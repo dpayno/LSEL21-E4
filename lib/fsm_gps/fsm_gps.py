@@ -12,8 +12,8 @@ class FsmGps(object):
     """ Default timeout for GPS frame sending
     """
 
-    def __init__(self, name):
-        self.TIMEOUT_DEFAULT = 300
+    def __init__(self, name, mi_sim868):
+        self.TIMEOUT_DEFAULT = 30
         self.name = name
 
         """ Input shared variables 
@@ -29,6 +29,7 @@ class FsmGps(object):
         """ Initialize the state machine
         """
         self.machine = Machine(model=self, states=FsmGps.states, initial='init')
+        self.sim868 = mi_sim868
 
         """ Add transitions
         """
@@ -61,8 +62,17 @@ class FsmGps(object):
     TODO: Modify GPS frame sending with GPS drivers
     """ 
     def send_gps_frame(self):
-        print("Se ha enviado un nuevo frame GPS")
+        msg = self.__get_gps()
+        self.sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", str(msg))
+        print(f"Se ha enviado un nuevo frame GPS: {msg}")
 
     def send_gps_frame_and_init_timer(self):
-        print("Se ha enviado un nuevo frame GPS y se ha iniciado el timer")
+        msg = self.__get_gps()
+        self.sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", str(msg))
+        print("Se ha enviado un nuevo frame GPS y se ha iniciado el timer: : {msg}")
         self.timeout_gps = int(dt.now().timestamp()) + self.TIMEOUT_DEFAULT
+        
+    def __get_gps(self):
+        gps_data = self.sim868.get_gps_data()
+        return "'UTC': {}, 'Latitude': {}, 'Longitude': {}, 'Altitude': {}, 'Speed': {}".format(gps_data["UTC"], gps_data["Latitude"], gps_data["Longitude"],gps_data["Altitude"],gps_data["Speed"])
+        

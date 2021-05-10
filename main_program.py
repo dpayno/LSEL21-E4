@@ -1,11 +1,16 @@
-from fsm_gps import FsmGps
+from lib.fsm_gps.fsm_gps import FsmGps
+from lib.sim868_driver.sim868_driver import SIM868
+
 
 """ Main function. Creates and inits a Gps FSM
 """
 def main():
-    mi_fsm = FsmGps("mi_fsm") # Create FSM
-    # mi_fsm.machine.get_graph().draw('fsm_gps.png', prog='dot') 
+    
+    mi_sim868 = SIM868(4)
+    
+    mi_fsm = FsmGps("mi_fsm", mi_sim868) # Create FSM
     mi_fsm.start() # Init state
+    
     while True:
         print("Estado: ", mi_fsm.state)
         mi_fsm.flag_active = int(input("Enter flag_active: "))
