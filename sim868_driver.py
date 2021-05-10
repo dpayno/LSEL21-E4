@@ -2,6 +2,7 @@ import serial
 import os, time
 import json
 import re
+import numpy as np
 
 from random import randrange 
 import RPi.GPIO as GPIO
@@ -70,7 +71,7 @@ class SIM868:
         self.__power_pin_init()
         self.power_on_board()
         self.__init_gsm()
-        #self.__init_gps()
+        self.__init_gps()
 
 
     ##############################################################
@@ -194,20 +195,19 @@ class SIM868:
         rcv = self.__port.read(128)
         print (rcv)
         
-        
-        self.__port.write(str.encode('AT+HTTPDATA='+str(len(body))+',5000'+'\r\n'))  # Select Message format as Text mode
+        self.__port.write(str.encode('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n'))  # Select Message format as Text mode
         time.sleep(0.5) #seconds
-        rcv = self.__port.read(128)
+        rcv = self.__port.read(len(body))
         print (rcv)
 
         self.__port.write(str.encode(str(body) + '\r\n'))  # Select Message format as Text mode
-        time.sleep(4.5) #seconds
+        time.sleep(9.5) #seconds
         rcv = self.__port.read(128)
         print (rcv)
         
         self.__port.write(str.encode('AT+HTTPACTION=1'+'\r\n'))  # Select Message format as Text mode
         time.sleep(1) #seconds
-        rcv = self.__port.read(128)
+        rcv = self.__port.read(256)
         print (rcv)
 
     # GPS
@@ -228,25 +228,3 @@ class SIM868:
             return self.gps_data
         except:
             return -1
-# Iniciamos sim868   
-new_sim868 = SIM868(4)
-
-# PRUEBAS GPS
-new_sim868.get_gps_data()
-
-
-# PRUEBAS GSM
-'''
-#leemos
-new_sim868.gsm_read('httpbin.org/get')
-'''
-#enviamos
-new_sim868.gsm_post('ptsv2.com/t/fn719-1620149096/post', "PRUEBA_HEADER", str(new_sim868.gps_data))
-
-'''
-#apagamos
-new_sim868.power_off_board()
-GPIO.cleanup()
-'''
-
-
