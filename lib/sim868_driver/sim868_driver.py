@@ -125,25 +125,25 @@ class SIM868:
         print (rcv)
 
         self.__port.write(str.encode('AT+SAPBR=3,1,"Contype","GPRS"'+'\r\n'))  
-        time.sleep(1) #seconds
+        time.sleep(3) #seconds
         rcv = self.__port.read(256)
         print (rcv)
         
 
         self.__port.write(str.encode('AT+SAPBR=3,1,"APN","' + str(self.__APN) + '"' + '\r\n')) 
-        time.sleep(1) #seconds
+        time.sleep(3) #seconds
         rcv = self.__port.read(256)
         print (rcv)
         
 
         self.__port.write(str.encode('AT+SAPBR=1,1'+'\r\n'))  
-        time.sleep(1) #seconds
+        time.sleep(3) #seconds
         rcv = self.__port.read(256)
         print (rcv)
         
 
         self.__port.write(str.encode('AT+HTTPINIT'+'\r\n'))  
-        time.sleep(1) #seconds
+        time.sleep(3) #seconds
         rcv = self.__port.read(256)
         print (rcv)
         
@@ -164,7 +164,7 @@ class SIM868:
     ##############################################################    
     
     
-    def gsm_read(self, url = None):
+    def gsm_get(self, url = None):
         
         self.__port.write(str.encode('AT+HTTPPARA=\"URL\",\"'+str(url)+'"'+'\r\n'))  # Select Message format as Text mode
         time.sleep(1) #seconds
