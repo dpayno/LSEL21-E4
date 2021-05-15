@@ -17,7 +17,7 @@ def main():
     mi_sim868 = SIM868(4)
      # Create FSMs
     fsm_gps = FsmGps("fsm_gps", mi_sim868)
-    fsm_gsm = FsmGsm("fsm_gsm")
+    fsm_gsm = FsmGsm("fsm_gsm", mi_sim868, "ptsv2.com/t/fn719-1620149096/post", "postman-echo.com/get?active=1")
     # Create Data Manager
     data_manager = DataManager(fsm_gps, fsm_gsm, CLIENT_NAME, MQTT_PORT,
     		MQTT_BROKER, MQTT_PUBLISH_TOPIC, MQTT_SUSCRIBE_TOPIC)
