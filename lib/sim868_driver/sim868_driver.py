@@ -72,7 +72,7 @@ class SIM868:
         self.power_on_board()
         self.__init_gsm()
         self.__init_gps()
-
+        
 
     ##############################################################
     # FUNCIONES CONFIGURACION
@@ -102,10 +102,7 @@ class SIM868:
     
     def __check_status(self):
         print("check status")
-        self.__port.write(str.encode('AT'+'\r\n'))
-        time.sleep(0.1)
-        rcv = self.__port.read(64)
-        print(rcv)
+        rcv = self.__send_serial('AT\r\n')
             
         if (str(rcv).find('OK') == -1):
             return 0
@@ -116,47 +113,37 @@ class SIM868:
     # FUNCIONES INIT GSM
     ##############################################################
     
+    
+    def __send_serial(self, cmd):
+        entire_data = ""
+        self.__port.write(str.encode(cmd))
+        response = self.__port.readline()
+        while (str(response) != "b''"):
+            entire_data += str(response)
+            print (response)
+            response = self.__port.readline()
+            
+        return entire_data
+    
     def __init_gsm(self):
         
         print("---------encendemos GSM---------")
-        self.__port.write(str.encode('AT+CPIN=' + str(self.__PIN) + '\r\n'))  
-        time.sleep(10) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
-
-        self.__port.write(str.encode('AT+SAPBR=3,1,"Contype","GPRS"'+'\r\n'))  
-        time.sleep(3) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
         
-
-        self.__port.write(str.encode('AT+SAPBR=3,1,"APN","' + str(self.__APN) + '"' + '\r\n')) 
-        time.sleep(3) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
-        
-
-        self.__port.write(str.encode('AT+SAPBR=1,1'+'\r\n'))  
-        time.sleep(3) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
-        
-
-        self.__port.write(str.encode('AT+HTTPINIT'+'\r\n'))  
-        time.sleep(3) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
-        
+        self.__send_serial('AT+CPIN=' + str(self.__PIN) + '\r\n')
+        time.sleep(4) #seconds
+        self.__send_serial('AT\r\n')
+        self.__send_serial('AT+SAPBR=3,1,"Contype","GPRS"'+'\r\n')
+        self.__send_serial('AT+SAPBR=3,1,"APN","' + str(self.__APN) + '"' + '\r\n')
+        self.__send_serial('AT+SAPBR=1,1'+'\r\n')
+        self.__send_serial('AT+HTTPINIT'+'\r\n')
+       
     ##############################################################
     # FUNCIONES INIT GPS
     ##############################################################
     
     def __init_gps(self):
         print("---------encendemos GPS---------")
-        self.__port.write(str.encode('AT+CGNSPWR=1'+'\r\n'))
-        time.sleep(2) #seconds
-        rcv = self.__port.read(4500)
-        print (rcv)
+        self.__send_serial('AT+CGNSPWR=1'+'\r\n')
         
     
     ##############################################################
@@ -166,58 +153,27 @@ class SIM868:
     
     def gsm_get(self, url = None):
         
-        self.__port.write(str.encode('AT+HTTPPARA=\"URL\",\"'+str(url)+'"'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(1) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
+        self.__send_serial('AT+HTTPPARA=\"URL\",\"'+str(url)+'"'+'\r\n')
+        self.__send_serial('AT+HTTPACTION=0'+'\r\n')
+        time.sleep(5) #seconds
+        return self.__send_serial('AT+HTTPREAD'+'\r\n')
 
-        self.__port.write(str.encode('AT+HTTPACTION=0'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(5) #seconds
-        rcv = self.__port.read(1024)
-        print (rcv)
-        
-        self.__port.write(str.encode('AT+HTTPREAD'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(5) #seconds
-        rcv = self.__port.read(4500)
-        print (rcv)
-        return rcv
     
     
     def gsm_post(self, url = None, headers = None, body = None):
         
-        self.__port.write(str.encode('AT+HTTPPARA=\"URL\",\"'+ url +'"'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(1) #seconds
-        rcv = self.__port.read(128)
-        print (rcv)
-        
-        self.__port.write(str.encode('AT+HTTPPARA=\"CONTENT\",\"' + str(headers) + '\"'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(1) #seconds
-        rcv = self.__port.read(128)
-        print (rcv)
-        
-        self.__port.write(str.encode('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(0.5) #seconds
-        rcv = self.__port.read(len(body))
-        print (rcv)
-
-        self.__port.write(str.encode(str(body) + '\r\n'))  # Select Message format as Text mode
-        time.sleep(9.5) #seconds
-        rcv = self.__port.read(128)
-        print (rcv)
-        
-        self.__port.write(str.encode('AT+HTTPACTION=1'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(1) #seconds
-        rcv = self.__port.read(256)
-        print (rcv)
+        self.__send_serial('AT+HTTPPARA=\"URL\",\"'+ url +'"'+'\r\n')
+        self.__send_serial('AT+HTTPPARA=\"CONTENT\",\"' + str(headers) + '\"'+'\r\n')
+        self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n')
+        self.__send_serial(str(body) + '\r\n')
+        self.__send_serial('AT+HTTPACTION=1'+'\r\n')
+        time.sleep(5) #seconds
 
     # GPS
     def get_gps_data(self):
         
-        self.__port.write(str.encode('AT+CGNSINF'+'\r\n'))  # Select Message format as Text mode
-        time.sleep(5) #seconds
-        rcv = self.__port.read(256)
-        rcv = str(rcv)
-        print(rcv)
+        rcv = self.__send_serial('AT+CGNSINF'+'\r\n')
+
         gps_parameters = rcv[rcv.find("+CGNSINF:")+10:rcv.find("OK")].split(",")
         gps_parameters = gps_parameters[:-1]
         try:
