@@ -1,5 +1,6 @@
 from transitions.extensions import GraphMachine as Machine
 from datetime import datetime as dt
+import json
 
 """ This class is the implementation of the GSM FSM behaviour.
 """
@@ -26,6 +27,10 @@ class FsmGsm(object):
         self.sim868   = mi_sim868
         self.post_url = ulr_post
         self.get_url  = url_get
+        
+        ''' Send data
+        '''
+        self.last_data = {}
         
         """ Timeout GSM
         """
@@ -91,7 +96,9 @@ class FsmGsm(object):
     def read_data_and_gsm_send(self):
         print("------ GSM SEND ------")
         headers = "Prueba_Header"
-        body = str(self.sim868.gps_data)
+        #body = str(self.sim868.gps_data)
+        self.last_data = self.sim868.gps_data
+        body = json.dumps(self.last_data)
         self.sim868.gsm_post(url = self.post_url, headers = headers, body = body)
         
     def reset_flag_new_data_available(self):
