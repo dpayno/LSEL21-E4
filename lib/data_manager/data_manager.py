@@ -1,7 +1,7 @@
+from lib.fsm_gsm.fsm_gsm import FsmGsm
+from lib.fsm_gps.fsm_gps import FsmGps
 import paho.mqtt.client as mqtt
 import json
-from fsm_gsm import FsmGsm
-from fsm_gps import FsmGps
 
 class MqttClient:
 	""" Esta clase representa un cliente MQTT.
@@ -43,31 +43,31 @@ class DataManager:
 	:param fsm_gps: FSM GPS
 	:param fsm_gsm: FSM GSM
 	"""
-	def __init__(self, client_name, mqtt_port, mqtt_broker, mqtt_publish_topic,
-			mqtt_subscribe_topic, fsm_gps, fsm_gsm, sim868):
+	def __init__(self, fsm_gps, fsm_gsm, client_name, mqtt_port, mqtt_broker,
+			mqtt_publish_topic, mqtt_subscribe_topic):
+		self.fsm_gps = fsm_gps
+		self.fsm_gsm = fsm_gsm
 		self.mqtt_client = MqttClient(client_name, mqtt_port, mqtt_broker)
 		self.mqtt_publish_topic = mqtt_publish_topic
 		self.mqtt_subscribe_topic = mqtt_subscribe_topic
-		self.fsm_gps = fsm_gps
-		self.fsm_gsm = fsm_gsm
 		self.flag_active = 0
-		self.last_data = {"gsp_data": 0}
+		self.fsm_gsm.last_data = {"gsp_data": 0}
 
-	def _message_handler(self, client, userdata, message):
+	def message_handler(self, client, userdata, message):
 		topic = str(message.topic)
 		data = str(message.payload.decode("utf-8"))
 		try:
 			data_dict = json.loads(data)
-			if data_dict["macaddress"] not in self.last_data:
-				self.last_data[data_dict["macaddress"]] = data_dict
+			if data_dict["macaddress"] not in self.fsm_gsm.last_data:
+				self.fsm_gsm.last_data[data_dict["macaddress"]] = data_dict
 			else:
-				self.last_data[data_dict["mac_address"]].update(data_dict)
+				self.fsm_gsm.last_data[data_dict["macaddress"]].update(data_dict)
 		except:
-			print("Not a JSON!")
+			print("Incorrect data!")
 
 	def start(self):
 		self.mqtt_client.connect()
-		self.mqtt_client.subscribe(self.mqtt_subscribe_topic, _message_handler)
+		self.mqtt_client.subscribe(self.mqtt_subscribe_topic, self.message_handler)
 		self.mqtt_client.start()
 
 	def get_data(self):
@@ -76,9 +76,10 @@ class DataManager:
 	def fire(self):
 		if self.flag_active != self.fsm_gsm.flag_active:
 			self.flag_active = self.fsm_gsm.flag_active
+			self.fsm_gps.flag_active = self.flag_active
 			alarm_status = {self.mqtt_publish_topic: self.flag_active}
 			alarm_status_json = json.dumps(alarm_status)
 			self.mqtt_client.client.publish(self.mqtt_publish_topic,
 					alarm_status_json)
-		if self.last_data["gps_data"] != self.fsm_gps.gps_data:
-			self.last_data["gps_data"] = self.fsm_gps.gps_data
+		if self.fsm_gsm.last_data["gps_data"] != self.fsm_gps.gps_data:
+			self.fsm_gsm.last_data["gps_data"] = self.fsm_gps.gps_data
