@@ -23,6 +23,7 @@ def main():
     # Init state
     fsm_gps.start()
     fsm_gsm.start()
+    data_manager.start()
 
     while True:
         fsm_gps.fire()
