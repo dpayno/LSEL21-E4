@@ -8,22 +8,7 @@ from random import randrange
 import RPi.GPIO as GPIO
 
 class SIM868:
-    EarthRadius = 6371e3         # meters
-
-    @staticmethod
-    def CalculateDeltaP(Position1, Position2):
-        phi1 = Position1.Latitude * math.pi / 180.0
-        phi2 = Position2.Latitude * math.pi / 180.0
-        deltaPhi = (Position2.Latitude - Position1.Latitude) * math.pi / 180.0
-        deltaLambda = (Position2.Longitude - Position1.Longitude) * math.pi / 180.0
-
-        a = math.sin(deltaPhi / 2) * math.sin(deltaPhi / 2) + math.cos(phi1) * math.cos(phi2) * math.sin(deltaLambda / 2) * math.sin(deltaLambda / 2)
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-        d = GPS.EarthRadius * c    # in meters
-
-        return d
-
-    
+        
     def __init__(self, pin):
         
         # On/Off
