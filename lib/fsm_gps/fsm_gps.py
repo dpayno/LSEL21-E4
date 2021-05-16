@@ -15,14 +15,28 @@ class FsmGps(object):
     def __init__(self, name, mi_sim868):
         self.TIMEOUT_DEFAULT = 30
         self.name = name
-
+               
+        
         """ Input shared variables 
         """
-        self.flag_active = 0 # Flag find car
+        self.flag_active = 1
 
         """ Timeout GPS
         """
         self.timeout_gps = 0
+        
+        ''' GPS dictionary
+        '''
+        self.gps_param = {
+            
+            'GNSS_status': 0,
+            'UTC': '',            # yyyyMMddhhmmss.sss
+            'Latitude': 0.0,      # ±dd.dddddd            [-90.000000,90.000000]
+            'Longitude': 0.0,     # ±ddd.dddddd           [-180.000000,180.000000]
+            'Altitude': 0.0,      # in meters
+            'Speed': 0.0,         # km/h [0,999.99]
+        }
+        
 
         """ Initialize the state machine
         """
@@ -40,6 +54,7 @@ class FsmGps(object):
     """ 
     def is_active(self):
         return self.flag_active
+        
 
     def is_not_active(self):
         return not self.flag_active
@@ -53,5 +68,11 @@ class FsmGps(object):
 
     def send_gps_frame_and_init_timer(self):
         gps_data = self.sim868.get_gps_data()
-        print( "'UTC': {}, 'Latitude': {}, 'Longitude': {}, 'Altitude': {}, 'Speed': {}".format(gps_data["UTC"], gps_data["Latitude"], gps_data["Longitude"],gps_data["Altitude"],gps_data["Speed"]))
+        self.gps_param['UTC'] = gps_data["UTC"]
+        self.gps_param['Latitude'] = gps_data["Latitude"]
+        self.gps_param['Longitude'] = gps_data["Longitude"]
+        self.gps_param['Altitude'] = gps_data["Altitude"]
+        self.gps_param['Speed'] = gps_data["Speed"]
         
+        print( "'UTC': {}, 'Latitude': {}, 'Longitude': {}, 'Altitude': {}, 'Speed': {}".format(self.gps_param["UTC"], self.gps_param["Latitude"], self.gps_param["Longitude"],self.gps_param["Altitude"],self.gps_param["Speed"]))
+        self.timeout_gps = int(dt.now().timestamp())+self.TIMEOUT_DEFAULT 
