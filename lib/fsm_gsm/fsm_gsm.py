@@ -1,6 +1,7 @@
 from transitions.extensions import GraphMachine as Machine
 from datetime import datetime as dt
 import json
+import re
 
 """ This class is the implementation of the GSM FSM behaviour.
 """
@@ -79,10 +80,14 @@ class FsmGsm(object):
     def gsm_get_and_update_timeout(self):
         
         if (self.__n >= 4):
-            rcv = str(self.sim868.gsm_get("postman-echo.com/get?active=0"))
+            rcv = (self.sim868.gsm_get("postman-echo.com/get?active=0"))
         else:
-            rcv = str(self.sim868.gsm_get(self.get_url))
-        self.__new_active = int(rcv[rcv.find('"active"')+10])
+            rcv = (self.sim868.gsm_get(self.get_url))
+        
+        json_text = re.search("({.*})",  rcv)[0]
+        rcv_dict = json.loads(json_text)
+        self.__new_active = int(rcv_dict["args"]["active"])
+        
         print(f"new_active = {self.__new_active}; active: {self.flag_active}")
         
         if self.flag_active != self.__new_active:
