@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import time
-import FsmGsm
+from fsm_gsm import FsmGsm
 
 CLIENT_NAME = "gateway_client_test"
 MQTT_PORT = 8883
@@ -43,11 +43,9 @@ class MqttClient:
 class DataManager:
 	""" Data Manager class
 	"""
-	def __init__(self, fsm_gps, fsm_gsm, client_name, mqtt_port, mqtt_broker):
+	def __init__(self, fsm_gsm, client_name, mqtt_port, mqtt_broker):
 		self.mqtt_client = MqttClient(client_name, mqtt_port, mqtt_broker)
-		self.fsm_gps = fsm_gps
 		self.fsm_gsm = fsm_gsm
-		self.sim868 = sim868
 
 	def get_data(self):
 		return 0
@@ -59,8 +57,9 @@ class DataManager:
 
 last_data = {}
 
-fsm_gsm = FsmGsm()
-data_manager = DataManager(fsm_gsm, CLIENT_NAME, MQTT_PORT, MQTT_BROKER, MQTT_SUSCRIBE_TOPIC)
+fsm_gsm = FsmGsm("mi_fsm")
+fsm_gsm.start()
+data_manager = DataManager(fsm_gsm, CLIENT_NAME, MQTT_PORT, MQTT_BROKER)
 #data_manager.run()
 
 #client = mqtt.Client(CLIENT_NAME)
@@ -71,3 +70,4 @@ data_manager = DataManager(fsm_gsm, CLIENT_NAME, MQTT_PORT, MQTT_BROKER, MQTT_SU
 
 while(1):
 	time.sleep(3)
+	data_manager.fsm_gsm.fire()
