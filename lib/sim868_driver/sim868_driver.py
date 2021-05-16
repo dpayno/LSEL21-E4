@@ -104,10 +104,9 @@ class SIM868:
         self.__port.write(str.encode(cmd))
         response = self.__port.readline()
         while (str(response) != "b''"):
-            entire_data += str(response)
-            print (response)
+            entire_data += response.decode("utf8")
             response = self.__port.readline()
-            
+        print(entire_data)
         return entire_data
     
     def __init_gsm(self):
