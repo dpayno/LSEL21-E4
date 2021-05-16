@@ -1,17 +1,7 @@
 import paho.mqtt.client as mqtt
-import time
-import FsmGsm
-
-CLIENT_NAME = "gateway_client_test"
-MQTT_PORT = 8883
-MQTT_BROKER = "192.168.0.18"
-MQTT_SUSCRIBE_TOPIC = "alarm_status"
-
-def message_handler(client, userdata, message):
-	print("Hey")
-	topic = str(message.topic)
-	message = str(message.payload.decode("utf-8"))
-	print(message)
+import json
+from fsm_gsm import FsmGsm
+from fsm_gps import FsmGps
 
 class MqttClient:
 	""" Esta clase representa un cliente MQTT.
@@ -32,7 +22,7 @@ class MqttClient:
 	def subscribe(self, mqtt_topic, message_function):
 		self.client.subscribe(mqtt_topic)
 		self.client.on_message = message_function
-	
+
 	def start(self):
 		self.client.loop_start()
 
@@ -41,33 +31,52 @@ class MqttClient:
 
 
 class DataManager:
-	""" Data Manager class
+	""" Esta clase representa un data manager. Se encarga de enviar la
+	información del estado de la alarma a los diferentes nodos y de recibir
+	los datos de los sensores de los nodos, actualizando una trama de datos.
+
+	:param client_name: MQTT client name
+	:param mqtt_port: MQTT port
+	:param mqtt_broker: MQTT broker IP address
+	:param mqtt_publish_topic: MQTT publication topic
+	:param mqtt_subscribe_topic: MQTT subscription topic
+	:param fsm_gps: FSM GPS
+	:param fsm_gsm: FSM GSM
 	"""
-	def __init__(self, fsm_gps, fsm_gsm, client_name, mqtt_port, mqtt_broker):
+	def __init__(self, client_name, mqtt_port, mqtt_broker, mqtt_publish_topic,
+			mqtt_subscribe_topic, fsm_gps, fsm_gsm, sim868):
 		self.mqtt_client = MqttClient(client_name, mqtt_port, mqtt_broker)
+		self.mqtt_publish_topic = mqtt_publish_topic
+		self.mqtt_subscribe_topic = mqtt_subscribe_topic
 		self.fsm_gps = fsm_gps
 		self.fsm_gsm = fsm_gsm
-		self.sim868 = sim868
+		self.flag_active = 0
+		self.last_data = {}
+
+	def _message_handler(self, client, userdata, message):
+		topic = str(message.topic)
+		data = str(message.payload.decode("utf-8"))
+		try:
+			data_dict = json.loads(data)
+			if data_dict["macaddress"] not in self.last_data:
+				self.last_data[data_dict["macaddress"]] = data_dict
+			else:
+				self.last_data[data_dict["mac_address"]].update(data_dict)
+		except:
+			print("Not a JSON!")
+
+	def start(self):
+		self.mqtt_client.connect()
+		self.mqtt_client.subscribe(self.mqtt_subscribe_topic, _message_handler)
+		self.mqtt_client.start()
 
 	def get_data(self):
-		return 0
+		return self.last_data
 
 	def fire(self):
-		if self.fsm_gsm.flag_active == 1:
-			self.fsm_gsm.flag_active = 0
-			self.mqtt_client.client.publish("alarm_status", "alarm on!")
-
-last_data = {}
-
-fsm_gsm = FsmGsm()
-data_manager = DataManager(fsm_gsm, CLIENT_NAME, MQTT_PORT, MQTT_BROKER, MQTT_SUSCRIBE_TOPIC)
-#data_manager.run()
-
-#client = mqtt.Client(CLIENT_NAME)
-#client.connect(MQTT_BROKER, MQTT_PORT)
-#client.subscribe(MQTT_SUSCRIBE_TOPIC)
-#client.on_message = test_handler
-#client.loop_start()
-
-while(1):
-	time.sleep(3)
+		if self.fsm_gsm.flag_active != self.flag_active:
+			self.flag_active = self.fsm_gsm.flag_active
+			alarm_status = {self.mqtt_publish_topic: self.flag_active}
+			alarm_status_json = json.dumps(alarm_status)
+			self.mqtt_client.client.publish(self.mqtt_publish_topic,
+					alarm_status_json)
