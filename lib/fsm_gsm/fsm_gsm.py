@@ -46,6 +46,7 @@ class FsmGsm(object):
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['deactive_request'], after='reset_alarm')
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['invalid_request'])
         
+        self.__n = 0
 
     # Funciones de guarda
     def check_timeout(self):
@@ -72,7 +73,10 @@ class FsmGsm(object):
     
     def gsm_get_and_update_timeout(self):
         
-        rcv = str(self.sim868.gsm_get(self.get_url))
+        if (self.__n >= 4):
+            rcv = str(self.sim868.gsm_get("postman-echo.com/get?active=0"))
+        else:
+            rcv = str(self.sim868.gsm_get(self.get_url))
         self.__new_active = int(rcv[rcv.find('"active"')+10])
         print(f"new_active = {self.__new_active}; active: {self.flag_active}")
         
@@ -80,12 +84,18 @@ class FsmGsm(object):
             self.flag_data_available = 1
             print("flag_data_available = 1")
         self.timeout_gsm = self.timeout_gsm + self.T_CHECK
+        
+        self.__n += 1
 
 
     def read_data_and_gsm_send(self):
-        print("Read Data and Gsm Send")
+        print("------ GSM SEND ------")
+        headers = "Prueba_Header"
+        body = str(self.sim868.gps_data)
+        self.sim868.gsm_post(url = self.post_url, headers = headers, body = body)
         
     def reset_flag_new_data_available(self):
+        print("Reset flag new data available")
         self.flag_data_available = 0
 
     def set_alarm(self):
