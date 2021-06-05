@@ -71,7 +71,7 @@ class DataManager:
 		self.mqtt_client.start()
 
 	def get_data(self):
-		return self.last_data
+		return self.fsm_gsm.last_data
 
 	def fire(self):
 		if self.flag_active != self.fsm_gsm.flag_active:
