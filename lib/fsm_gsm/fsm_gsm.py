@@ -35,8 +35,7 @@ class FsmGsm(object):
         
         """ Timeout GSM
         """
-        #self.timeout_gsm = int(dt.now().timestamp()) + self.T_CHECK
-        self.timeout_gsm = 0
+        self.timeout_gsm = int(dt.now().timestamp()) + self.T_CHECK
 
         """ Initialize the state machine
         """
