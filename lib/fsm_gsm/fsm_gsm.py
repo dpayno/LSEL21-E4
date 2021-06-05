@@ -1,7 +1,7 @@
 from transitions.extensions import GraphMachine as Machine
 from datetime import datetime as dt
-from gsm_driver import GsmDriver as gsm_driver
-from fifo_driver import FifoDriver as fifo_driver
+from lib.fsm_gsm.gsm_driver import GsmDriver as gsm_driver
+from lib.fsm_gsm.fifo_driver import FifoDriver as fifo_driver
 
 """ This class is the implementation of the GSM FSM behaviour.
 """
