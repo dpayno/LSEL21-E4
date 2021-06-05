@@ -8,6 +8,8 @@ MQTT_PORT = 8883
 MQTT_BROKER = "192.168.0.110"
 MQTT_PUBLISH_TOPIC = "alarm_status"
 MQTT_SUSCRIBE_TOPIC = "sensor_data"
+HTTP_POST_URL = "ptsv2.com/t/fn719-1620149096/post"
+HTTP_GET_URL = "postman-echo.com/get?active=1"
 
 """ Main function. Creates and inits a Gps FSM
 """
@@ -17,7 +19,7 @@ def main():
     mi_sim868 = SIM868(4)
      # Create FSMs
     fsm_gps = FsmGps("fsm_gps", mi_sim868)
-    fsm_gsm = FsmGsm("fsm_gsm", mi_sim868, "ptsv2.com/t/fn719-1620149096/post", "postman-echo.com/get?active=1")
+    fsm_gsm = FsmGsm("fsm_gsm", mi_sim868, HTTP_POST_URL, HTTP_GET_URL)
     # Create Data Manager
     data_manager = DataManager(fsm_gps, fsm_gsm, CLIENT_NAME, MQTT_PORT,
     		MQTT_BROKER, MQTT_PUBLISH_TOPIC, MQTT_SUSCRIBE_TOPIC)
