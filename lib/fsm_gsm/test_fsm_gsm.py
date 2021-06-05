@@ -1,14 +1,10 @@
-import sys
-# insert at 1, 0 is the script path (or '' in REPL)
-sys.path.insert(1, '../sim868_driver')
-
 import unittest
 from unittest.mock import Mock
 from unittest.mock import MagicMock
 from unittest.mock import patch
 from fsm_gsm import FsmGsm
 from datetime import datetime as dt
-from sim868_driver import SIM868
+
 
 class TestStringMethods(unittest.TestCase):
 
