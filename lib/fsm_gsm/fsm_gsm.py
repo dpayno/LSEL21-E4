@@ -1,91 +1,121 @@
 from transitions.extensions import GraphMachine as Machine
 from datetime import datetime as dt
-from lib.fsm_gsm.gsm_driver import GsmDriver as gsm_driver
-from lib.fsm_gsm.fifo_driver import FifoDriver as fifo_driver
+import json
+import re
 
 """ This class is the implementation of the GSM FSM behaviour.
 """
 class FsmGsm(object):
 
-	""" FSM states
-	"""
-	states = ['init', 'GSM_IDLE', 'GSM_CHECK', 'GSM_READ']
+    """ FSM states
+    """
+    states = ['init', 'GSM_IDLE', 'GSM_CHECK', 'GSM_READ']
 
-	request_list = ["GSM_ACTIVE_REQUEST", "GSM_DEACTIVE_REQUEST", "GSM_POSITION_REQUEST"]
+    request_list = ["GSM_ACTIVE_REQUEST", "GSM_DEACTIVE_REQUEST", "GSM_POSITION_REQUEST"]
 
-	def __init__(self, name):
+    def __init__(self, name, mi_sim868, ulr_post, url_get):
+        
+        self.name = name
+        self.T_CHECK = 30
+        self.flag_data_available = 0
+        self.flag_active = 0
+        self.__new_active = 0
+        self.flag_find_car = 0
+        self.gsm_data = None
+        
+        ''' SIM868
+        '''
+        self.sim868   = mi_sim868
+        self.post_url = ulr_post
+        self.get_url  = url_get
+        
+        ''' Send data
+        '''
+        self.last_data = {}
+        
+        """ Timeout GSM
+        """
+        #self.timeout_gsm = int(dt.now().timestamp()) + self.T_CHECK
+        self.timeout_gsm = 0
 
-		self.name = name
-		self.T_CHECK = 5
-		self.flag_data_available = 0
-		self.flag_active = 0
-		self.flag_find_car = 0
-		self.gsm_data = None
+        """ Initialize the state machine
+        """
+        self.machine = Machine(model=self, states=FsmGsm.states, initial='init')
 
-		""" Timeout GSM
-		"""
-		self.timeout_gsm = int(dt.now().timestamp()) + self.T_CHECK
+        """ Add transitions
+        """
+        self.machine.add_transition(trigger='start', source='init', dest='GSM_IDLE')
+        self.machine.add_transition('fire', 'GSM_IDLE', 'GSM_CHECK', conditions=['check_timeout'], after='gsm_get_and_update_timeout')
+        self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_READ', conditions=['gsm_new_data_available'], after = 'reset_flag_new_data_available')
+        self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_new_data_available'], after='read_data_and_gsm_send')
+        self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['active_request'], after='set_alarm')
+        self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['deactive_request'], after='reset_alarm')
+        self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['invalid_request'])
+        
+        self.__n = 0
 
-		""" Initialize the state machine
-		"""
-		self.machine = Machine(model=self, states=FsmGsm.states, initial='init')
+    # Funciones de guarda
+    def check_timeout(self):
+        return int(dt.now().timestamp()) > self.timeout_gsm
 
-		""" Add transitions
-		"""
-		self.machine.add_transition(trigger='start', source='init', dest='GSM_IDLE')
-		self.machine.add_transition('fire', 'GSM_IDLE', 'GSM_CHECK', conditions=['check_timeout'], after='update_timeout')
-		self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_READ', conditions=['check_gsm_data_available'], after='gsm_read')
-		self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_data_available_and_fifo_is_empty'])
-		self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_data_available_and_fifo_is_not_empty'], after='read_fifo_and_gsm_send')
-		self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['active_request'], after='set_alarm')
-		self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['deactive_request'], after='reset_alarm')
-		self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['pos_request'], after='find_car')
-		self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['invalid_request'])
+    def gsm_new_data_available(self):
+        return self.flag_data_available
 
-	def check_timeout(self):
-		return int(dt.now().timestamp()) > self.timeout_gsm
+    def gsm_not_new_data_available(self):
+        return (not self.flag_data_available)
 
-	def check_gsm_data_available(self):
-		return self.flag_data_available
+    def active_request(self):
+        return (self.__new_active == 1)
 
-	def gsm_not_data_available_and_fifo_is_empty(self):
-		return (not self.flag_data_available) and (fifo_driver.fifo_is_empty())
+    def deactive_request(self):
+        return (self.__new_active == 0)
 
-	def gsm_not_data_available_and_fifo_is_not_empty(self):
-		return (not self.flag_data_available) and (not fifo_driver.fifo_is_empty())
+    def invalid_request(self):
+        print("Dato no valido")
+        return (self.__new_active != 1 and self.__new_active != 0)
 
-	def active_request(self):
-		return (self.gsm_data == "GSM_ACTIVE_REQUEST")
 
-	def deactive_request(self):
-		return (self.gsm_data == "GSM_DEACTIVE_REQUEST")
+    # Funciones salida
+    
+    def gsm_get_and_update_timeout(self):
+        
+        if (self.__n >= 4):
+            rcv = (self.sim868.gsm_get("postman-echo.com/get?active=0"))
+        else:
+            rcv = (self.sim868.gsm_get(self.get_url))
+        
+        json_text = re.search("({.*})",  rcv)[0]
+        rcv_dict = json.loads(json_text)
+        self.__new_active = int(rcv_dict["args"]["active"])
+        
+        print(f"new_active = {self.__new_active}; active: {self.flag_active}")
+        
+        if self.flag_active != self.__new_active:
+            self.flag_data_available = 1
+            print("flag_data_available = 1")
+        self.timeout_gsm = self.timeout_gsm + self.T_CHECK
+        
+        self.__n += 1
 
-	def pos_request(self):
-		return (self.gsm_data == "GSM_POSITION_REQUEST")
 
-	def invalid_request(self):
-		return (self.gsm_data not in self.request_list)
+    def read_data_and_gsm_send(self):
+        print("------ GSM SEND ------")
+        headers = "Prueba_Header"
+        #body = str(self.sim868.gps_data)
+        self.last_data = self.sim868.gps_data
+        body = json.dumps(self.last_data)
+        self.sim868.gsm_post(url = self.post_url, headers = headers, body = body)
+        
+    def reset_flag_new_data_available(self):
+        print("Reset flag new data available")
+        self.flag_data_available = 0
 
-	def update_timeout(self):
-		self.timeout_gsm = self.timeout_gsm + self.T_CHECK
+    def set_alarm(self):
+        self.flag_active = 1
+        print("------Set alarm!------")
 
-	def gsm_read(self):
-		self.gsm_data = gsm_driver.gsm_read_data()
-		print("Gsm read!")
+    def reset_alarm(self):
+        self.flag_active = 0
+        print("------Reset alarm!------")
 
-	def read_fifo_and_gsm_send(self):
-		data = fifo_driver.fifo_read()
-		gsm_driver.gsm_send(data)
-		print("Read Fifo and Gsm Send")
-
-	def set_alarm(self):
-		self.flag_active = 1
-		print("Set alarm!")
-
-	def reset_alarm(self):
-		self.flag_active = 0
-		print("Reset alarm!")
-
-	def find_car(self):
-		self.flag_find_car = 1
-		print("Find car!")
+    
