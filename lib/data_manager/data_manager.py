@@ -51,7 +51,7 @@ class DataManager:
 		self.mqtt_publish_topic = mqtt_publish_topic
 		self.mqtt_subscribe_topic = mqtt_subscribe_topic
 		self.flag_active = 0
-		self.fsm_gsm.last_data = {"gsp_data": 0}
+		self.fsm_gsm.last_data = {"gps_data": 0}
 
 	def message_handler(self, client, userdata, message):
 		topic = str(message.topic)
@@ -81,5 +81,5 @@ class DataManager:
 			alarm_status_json = json.dumps(alarm_status)
 			self.mqtt_client.client.publish(self.mqtt_publish_topic,
 					alarm_status_json)
-		if self.fsm_gsm.last_data["gps_data"] != self.fsm_gps.gps_data:
-			self.fsm_gsm.last_data["gps_data"] = self.fsm_gps.gps_data
+		if self.fsm_gsm.last_data["gps_data"] != self.fsm_gps.gps_param:
+			self.fsm_gsm.last_data["gps_data"] = self.fsm_gps.gps_param
