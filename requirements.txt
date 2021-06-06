@@ -1,0 +1,6 @@
+
+graphviz
+RPi.GPIO
+paho-mqtt
+transitions
+mosquitto-clients
