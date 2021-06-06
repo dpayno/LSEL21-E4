@@ -22,7 +22,7 @@ void mqtt_message_arrived(MessageData* data)
         printf("Error before: [%s]\n", cJSON_GetErrorPtr());
     } else {
         // Obtain "active" value & convert to integer
-        cJSON* active_json = cJSON_GetObjectItem(rx_json, "active");
+        cJSON* active_json = cJSON_GetObjectItem(rx_json, "alarm_status");
         char* active_str = cJSON_Print(active_json);
         printf("New active value: %s\n", active_str);
         int active_int = atoi(active_str);

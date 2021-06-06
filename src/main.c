@@ -81,7 +81,6 @@ void task_example(void* ignore)
     mqtt_hal_init(&(fsm_send.client), MQTT_PORT, MQTT_BROKER, MQTT_CLIENT, &fsm_send);
     mqtt_hal_suscribe(&(fsm_send.client), MQTT_SUSCRIBE_TOPIC);
     printf("Configuration finished!\n");
-    fsm_send_data_set_active(&fsm_send, 1);
     fsm_fire((fsm_t*)&fsm_send);
 
     // FSM loop
