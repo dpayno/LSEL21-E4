@@ -58,6 +58,7 @@ class DataManager:
 		data = str(message.payload.decode("utf-8"))
 		try:
 			data_dict = json.loads(data)
+			data_dict["macaddress"] = str(data_dict["macaddress"])
 			if data_dict["macaddress"] not in self.fsm_gsm.last_data:
 				self.fsm_gsm.last_data[data_dict["macaddress"]] = data_dict
 			else:
