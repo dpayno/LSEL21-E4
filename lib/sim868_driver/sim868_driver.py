@@ -147,11 +147,13 @@ class SIM868:
     def gsm_post(self, url = None, headers = None, body = None):
         
         self.__send_serial('AT+HTTPPARA=\"URL\",\"'+ url +'"'+'\r\n')
-        self.__send_serial('AT+HTTPPARA=\"CONTENT\",\"' + str(headers) + '\"'+'\r\n')
-        self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n')
+        if headers:
+            self.__send_serial('AT+HTTPPARA=\"CONTENT\",\"' + str(headers) + '\"'+'\r\n')
+        self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n') 
         self.__send_serial(str(body) + '\r\n')
         self.__send_serial('AT+HTTPACTION=1'+'\r\n')
         time.sleep(5) #seconds
+        return self.__send_serial('AT+HTTPREAD'+'\r\n')
 
     # GPS
     def get_gps_data(self):

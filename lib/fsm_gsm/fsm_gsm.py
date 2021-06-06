@@ -13,7 +13,7 @@ class FsmGsm(object):
 
     request_list = ["GSM_ACTIVE_REQUEST", "GSM_DEACTIVE_REQUEST", "GSM_POSITION_REQUEST"]
 
-    def __init__(self, name, mi_sim868, ulr_post, url_get):
+    def __init__(self, name, mi_sim868, url_post_token, url_post_notification, refresh_token, url_get, device_id):
         
         self.name = name
         self.T_CHECK = 30
@@ -26,8 +26,12 @@ class FsmGsm(object):
         ''' SIM868
         '''
         self.sim868   = mi_sim868
-        self.post_url = ulr_post
-        self.get_url  = url_get
+        self.url_post_token = url_post_token
+        self.url_post_notification = url_post_notification
+        self.refresh_token = refresh_token
+        self.url_get  = url_get
+        self.token = 0
+        self.device_id = device_id
         
         ''' Send data
         '''
@@ -81,7 +85,7 @@ class FsmGsm(object):
         if (self.__n >= 4):
             rcv = (self.sim868.gsm_get("postman-echo.com/get?active=0"))
         else:
-            rcv = (self.sim868.gsm_get(self.get_url))
+            rcv = (self.sim868.gsm_get(self.url_get))
         
         json_text = re.search("({.*})",  rcv)[0]
         rcv_dict = json.loads(json_text)
@@ -97,13 +101,25 @@ class FsmGsm(object):
         self.__n += 1
 
 
+
     def read_data_and_gsm_send(self):
         print("------ GSM SEND ------")
         headers = "Prueba_Header"
         #body = str(self.sim868.gps_data)
-        self.last_data = self.sim868.gps_data
-        body = json.dumps(self.last_data)
-        self.sim868.gsm_post(url = self.post_url, headers = headers, body = body)
+        #self.last_data = self.sim868.gps_data
+        '''Get token'''
+        body = {"refreshToken": self.refresh_token}
+        response = self.sim868.gsm_post(url = self.url_post_token, body = json.dumps(body))
+        json_text = re.search("({.*})",  response)[0]
+        token_dict = json.loads(json_text)
+        self.token = token_dict["accessToken"]
+
+        '''Send notification'''
+        body_dict = {"notification": self.device_id, "parameters": self.last_data}
+        body = json.dumps(body_dict)
+        headers = f"Authorization: Bearer {self.token}"
+        print(f"BODY --> {body}")
+        self.sim868.gsm_post(url = self.url_post_notification, headers = headers, body = body)
         
     def reset_flag_new_data_available(self):
         print("Reset flag new data available")
