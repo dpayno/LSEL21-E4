@@ -148,7 +148,7 @@ class SIM868:
         
         self.__send_serial('AT+HTTPPARA=\"URL\",\"'+ url +'"'+'\r\n')
         if headers:
-            self.__send_serial('AT+HTTPPARA=\"CONTENT\",\"' + str(headers) + '\"'+'\r\n')
+            self.__send_serial('AT+HTTPPARA=\"USERDATA\",\"' + str(headers) + '\"'+'\r\n')
         self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n') 
         self.__send_serial(str(body) + '\r\n')
         self.__send_serial('AT+HTTPACTION=1'+'\r\n')
