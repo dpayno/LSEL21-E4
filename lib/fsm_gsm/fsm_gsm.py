@@ -50,7 +50,8 @@ class FsmGsm(object):
         self.machine.add_transition(trigger='start', source='init', dest='GSM_IDLE')
         self.machine.add_transition('fire', 'GSM_IDLE', 'GSM_CHECK', conditions=['check_timeout'], after='gsm_get_and_update_timeout')
         self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_READ', conditions=['gsm_new_data_available'], after = 'reset_flag_new_data_available')
-        self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_new_data_available'], after='read_data_and_gsm_send')
+        self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_new_data_available_and_active'], after='read_data_and_gsm_send')
+        self.machine.add_transition('fire', 'GSM_CHECK', 'GSM_IDLE', conditions=['gsm_not_new_data_available_and_not_active'])
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['active_request'], after='set_alarm')
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['deactive_request'], after='reset_alarm')
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['invalid_request'])
@@ -64,8 +65,11 @@ class FsmGsm(object):
     def gsm_new_data_available(self):
         return self.flag_data_available
 
-    def gsm_not_new_data_available(self):
-        return (not self.flag_data_available)
+    def gsm_not_new_data_available_and_active(self):
+        return (not self.flag_data_available and self.flag_active)
+
+    def gsm_not_new_data_available_and_not_active(self):
+        return (not self.flag_data_available and not self.flag_active)
 
     def active_request(self):
         return (self.__new_active == 1)
@@ -130,4 +134,3 @@ class FsmGsm(object):
     def reset_alarm(self):
         self.flag_active = 0
         print("------Reset alarm!------")
-
