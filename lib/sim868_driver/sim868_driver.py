@@ -4,20 +4,20 @@ import json
 import re
 import numpy as np
 
-from random import randrange 
+from random import randrange
 import RPi.GPIO as GPIO
 
 class SIM868:
-        
+
     def __init__(self, pin):
-        
+
         # On/Off
         self.Power_pin = pin
-        
+
         # GPS
-        
+
         self.gps_data = {
-            
+
             'GNSS_status': 0,
             'Fix_status': 0,
             'UTC': '',            # yyyyMMddhhmmss.sss
@@ -34,16 +34,16 @@ class SIM868:
             'Reserved2':'',
             'Gnss_satellites_view':0, # [0,99]
             'Gnss_satellites_used':0, # [0,99]
-            'Reserved3': '',  
-            'C/N0_max': 0, 
+            'Reserved3': '',
+            'C/N0_max': 0,
             'HPA': 0.0,
             'VPA': 0
         }
-        
+
         # Imself.__port config data
         with open('config.json') as file:
             config_dict = json.load(file)
-        
+
         #GSM
         self.__PIN = config_dict["PIN"]
         self.__APN = config_dict["APN"]
@@ -57,12 +57,12 @@ class SIM868:
         self.power_on_board()
         self.__init_gsm()
         self.__init_gps()
-        
+
 
     ##############################################################
     # FUNCIONES CONFIGURACION
     ##############################################################
-    
+
     def __power_pin_init(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.Power_pin, GPIO.OUT)
@@ -72,33 +72,33 @@ class SIM868:
         if ( not self.__check_status() ):
             self.__switch_power()
             self.power_on_board()
-        
+
 
     def power_off_board(self):
         if ( self.__check_status() ):
             self.__switch_power()
             self.power_off_board()
-        
+
     def __switch_power(self):
         GPIO.output(self.Power_pin, False)
         time.sleep(1.5) #seconds
         GPIO.output(self.Power_pin, True)
-        time.sleep(5) 
-    
+        time.sleep(5)
+
     def __check_status(self):
         print("check status")
         rcv = self.__send_serial('AT\r\n')
-            
+
         if (str(rcv).find('OK') == -1):
             return 0
         else:
             return 1
-        
+
     ##############################################################
     # FUNCIONES INIT GSM
     ##############################################################
-    
-    
+
+
     def __send_serial(self, cmd):
         entire_data = ""
         self.__port.write(str.encode(cmd))
@@ -108,11 +108,11 @@ class SIM868:
             response = self.__port.readline()
         print(entire_data)
         return entire_data
-    
+
     def __init_gsm(self):
-        
+
         print("---------encendemos GSM---------")
-        
+
         self.__send_serial('AT+CPIN=' + str(self.__PIN) + '\r\n')
         time.sleep(4) #seconds
         self.__send_serial('AT\r\n')
@@ -120,36 +120,37 @@ class SIM868:
         self.__send_serial('AT+SAPBR=3,1,"APN","' + str(self.__APN) + '"' + '\r\n')
         self.__send_serial('AT+SAPBR=1,1'+'\r\n')
         self.__send_serial('AT+HTTPINIT'+'\r\n')
-       
+
     ##############################################################
     # FUNCIONES INIT GPS
     ##############################################################
-    
+
     def __init_gps(self):
         print("---------encendemos GPS---------")
         self.__send_serial('AT+CGNSPWR=1'+'\r\n')
-        
-    
+
+
     ##############################################################
     # FUNCIONES PUBLICAS
-    ##############################################################    
-    
-    
-    def gsm_get(self, url = None):
-        
+    ##############################################################
+
+    def gsm_get(self, url = None, headers = None):
+
         self.__send_serial('AT+HTTPPARA=\"URL\",\"'+str(url)+'"'+'\r\n')
+        if headers:
+            self.__send_serial('AT+HTTPPARA=\"USERDATA\",\"' + str(headers) + '\"'+'\r\n')
         self.__send_serial('AT+HTTPACTION=0'+'\r\n')
         time.sleep(5) #seconds
         return self.__send_serial('AT+HTTPREAD'+'\r\n')
 
-    
-    
+
+
     def gsm_post(self, url = None, headers = None, body = None):
-        
+
         self.__send_serial('AT+HTTPPARA=\"URL\",\"'+ url +'"'+'\r\n')
         if headers:
             self.__send_serial('AT+HTTPPARA=\"USERDATA\",\"' + str(headers) + '\"'+'\r\n')
-        self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n') 
+        self.__send_serial('AT+HTTPDATA='+str(len(body))+',10000'+'\r\n')
         self.__send_serial(str(body) + '\r\n')
         self.__send_serial('AT+HTTPACTION=1'+'\r\n')
         time.sleep(5) #seconds
@@ -157,7 +158,7 @@ class SIM868:
 
     # GPS
     def get_gps_data(self):
-        
+
         rcv = self.__send_serial('AT+CGNSINF'+'\r\n')
 
         gps_parameters = rcv[rcv.find("+CGNSINF:")+10:rcv.find("OK")].split(",")
@@ -170,3 +171,4 @@ class SIM868:
             return self.gps_data
         except:
             return -1
+

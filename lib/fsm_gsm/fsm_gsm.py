@@ -14,7 +14,7 @@ class FsmGsm(object):
     request_list = ["GSM_ACTIVE_REQUEST", "GSM_DEACTIVE_REQUEST", "GSM_POSITION_REQUEST"]
 
     def __init__(self, name, mi_sim868, url_post_token, url_post_notification, refresh_token, url_get, device_id):
-        
+
         self.name = name
         self.T_CHECK = 30
         self.flag_data_available = 0
@@ -22,7 +22,7 @@ class FsmGsm(object):
         self.__new_active = 0
         self.flag_find_car = 0
         self.gsm_data = None
-        
+
         ''' SIM868
         '''
         self.sim868   = mi_sim868
@@ -32,11 +32,11 @@ class FsmGsm(object):
         self.url_get  = url_get
         self.token = 0
         self.device_id = device_id
-        
+
         ''' Send data
         '''
         self.last_data = {}
-        
+
         """ Timeout GSM
         """
         self.timeout_gsm = int(dt.now().timestamp()) + self.T_CHECK
@@ -54,7 +54,7 @@ class FsmGsm(object):
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['active_request'], after='set_alarm')
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['deactive_request'], after='reset_alarm')
         self.machine.add_transition('fire', 'GSM_READ', 'GSM_IDLE', conditions=['invalid_request'])
-        
+
         self.__n = 0
 
     # Funciones de guarda
@@ -79,34 +79,39 @@ class FsmGsm(object):
 
 
     # Funciones salida
-    
+
     def gsm_get_and_update_timeout(self):
-        
-        if (self.__n >= 4):
-            rcv = (self.sim868.gsm_get("postman-echo.com/get?active=0"))
-        else:
-            rcv = (self.sim868.gsm_get(self.url_get))
-        
-        json_text = re.search("({.*})",  rcv)[0]
-        rcv_dict = json.loads(json_text)
-        self.__new_active = int(rcv_dict["args"]["active"])
-        
+        self.get_token()
+        headers = f"Authorization: Bearer {self.token}"
+        rcv = (self.sim868.gsm_get(self.url_get, headers))
+        try:
+            json_text = re.search("({.*})",  rcv)[0]
+            rcv_dict = json.loads(json_text)
+            self.__new_active = int(rcv_dict["parameters"]["active"])
+        except:
+            pass
+
         print(f"new_active = {self.__new_active}; active: {self.flag_active}")
-        
+
         if self.flag_active != self.__new_active:
             self.flag_data_available = 1
             print("flag_data_available = 1")
         self.timeout_gsm = self.timeout_gsm + self.T_CHECK
-        
+
         self.__n += 1
 
 
 
     def read_data_and_gsm_send(self):
         print("------ GSM SEND ------")
-        headers = "Prueba_Header"
-        #body = str(self.sim868.gps_data)
-        #self.last_data = self.sim868.gps_data
+        self.get_token();
+        '''Send notification'''
+        body_dict = {"notification": self.device_id, "parameters": self.last_data}
+        body = json.dumps(body_dict)
+        headers = f"Authorization: Bearer {self.token}"
+        self.sim868.gsm_post(url = self.url_post_notification, headers = headers, body = body)
+
+    def get_token(self):
         '''Get token'''
         body = {"refreshToken": self.refresh_token}
         response = self.sim868.gsm_post(url = self.url_post_token, body = json.dumps(body))
@@ -114,13 +119,6 @@ class FsmGsm(object):
         token_dict = json.loads(json_text)
         self.token = token_dict["accessToken"]
 
-        '''Send notification'''
-        body_dict = {"notification": self.device_id, "parameters": self.last_data}
-        body = json.dumps(body_dict)
-        headers = f"Authorization: Bearer {self.token}"
-        print(f"BODY --> {body}")
-        self.sim868.gsm_post(url = self.url_post_notification, headers = headers, body = body)
-        
     def reset_flag_new_data_available(self):
         print("Reset flag new data available")
         self.flag_data_available = 0
@@ -133,4 +131,3 @@ class FsmGsm(object):
         self.flag_active = 0
         print("------Reset alarm!------")
 
-    
