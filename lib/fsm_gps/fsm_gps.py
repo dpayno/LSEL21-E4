@@ -19,7 +19,7 @@ class FsmGps(object):
         
         """ Input shared variables 
         """
-        self.flag_active = 1
+        self.flag_active = 0
 
         """ Timeout GPS
         """
