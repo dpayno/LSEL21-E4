@@ -17,6 +17,8 @@ Es necesario crear un fichero llamado "config.json" cuyos contenido sea:
 }
 ```
 
+Este fichero debe guardarse en la carpeta raiz del proyecto, donde se encuentra el fichero main_program.py
+
 ## Procedimiento de notificación a Device Hive
 
 ### Solicitud de token a partir de refresh token
