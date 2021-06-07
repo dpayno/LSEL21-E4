@@ -1,6 +1,10 @@
 # LSEL21-E4
 LSEL 2021 Equipo 4 - Sistema de seguridad para coches
 
+## Wiki del proyecto
+
+En la wiki https://github.com/dpayno/LSEL21-E4/wiki/Wiki:-LSEL-2021-Equipo-4---Sistema-de-seguridad-para-coches se pueden ver los diagramas de las fsm utilizadas en el proyecto. 
+
 
 ## Configuración de la tarjeta SIM
 Es necesario crear un fichero llamado "config.json" cuyos contenido sea:
