@@ -1,6 +1,8 @@
 # LSEL21-E4
 LSEL 2021 Equipo 4 - Sistema de seguridad para coches
 
+![Esquema general del proyecto](https://github.com/dpayno/LSEL21-E4/blob/devel/ESQUEMA_GENERAL.png)
+
 ## Wiki del proyecto
 
 En la wiki https://github.com/dpayno/LSEL21-E4/wiki/Wiki:-LSEL-2021-Equipo-4---Sistema-de-seguridad-para-coches se pueden ver los diagramas de las fsm utilizadas en el proyecto. 
