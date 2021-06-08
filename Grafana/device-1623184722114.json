@@ -1,0 +1,778 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "LSEL",
+      "tooltip": "",
+      "type": "link",
+      "url": ""
+    }
+  ],
+  "panels": [
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 6,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "degree"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "limit": 10,
+          "values": false
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.gps_data.Latitude",
+          "label": "Latitude",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Latitude",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.gps_data.Longitude",
+          "hide": false,
+          "label": "Longitude",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "B",
+          "target": "Longitude",
+          "type": "notification"
+        }
+      ],
+      "title": "Location",
+      "type": "stat"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 6,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.gps_data.Altitude",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "notificationA",
+          "type": "notification"
+        }
+      ],
+      "title": "Altitude",
+      "type": "stat"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 50000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 11,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.movement[0].x",
+          "label": "Accel x",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Accel x",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.movement[0].y",
+          "hide": false,
+          "label": "Accel y",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "B",
+          "target": "Accel y",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.movement[0].z",
+          "hide": false,
+          "label": "Accel z",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "C",
+          "target": "Accel z",
+          "type": "notification"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Acceleration",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "velocitykmh"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.7",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.gps_data.Speed",
+          "label": "Speed",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "kbk<k",
+          "target": "Speed",
+          "type": "notification"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Speed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:2040",
+          "format": "velocitykmh",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:2041",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": -0.0001
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 12,
+        "y": 6
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.movement[0].status",
+          "label": "Sensor status (ON/OFF)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Sensor status (ON/OFF)",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.movement[0].movement",
+          "hide": false,
+          "label": "Movement detected (YES/NO)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "B",
+          "target": "Movement detected (YES/NO)",
+          "type": "notification"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Movement",
+      "type": "stat"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 13
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.hit[0].status",
+          "label": "Sensor status (ON/OFF)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Sensor status (ON/OFF)",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.hit[0].hit",
+          "hide": false,
+          "label": "Hit detected (YES/NO)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "B",
+          "target": "Hit detected (YES/NO)",
+          "type": "notification"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Hit detection",
+      "type": "stat"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 13
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.door[0].status",
+          "label": "Sensor status (ON/OFF)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Sensor status (ON/OFF)",
+          "type": "notification"
+        },
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.door[0].door_state",
+          "hide": false,
+          "label": "Door status (OPEN/CLOSED)",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "refId": "B",
+          "target": "Door status (OPEN/CLOSED)",
+          "type": "notification"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Door",
+      "type": "stat"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 16,
+        "y": 13
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.macaddress1.light[0].status",
+          "label": "Light status ()",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "Light status ()",
+          "type": "notification"
+        }
+      ],
+      "title": "Light Status (ON/OFF)",
+      "type": "stat"
+    },
+    {
+      "circleMaxSize": 30,
+      "circleMinSize": 2,
+      "colors": [
+        "#73BF69",
+        "rgba(237, 129, 40, 0.89)",
+        "#F2495C"
+      ],
+      "datasource": "DeviceHive",
+      "decimals": 6,
+      "esLocationName": "",
+      "esMetric": "Count",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 19
+      },
+      "hideEmpty": false,
+      "hideZero": false,
+      "id": 20,
+      "initialZoom": 1,
+      "jsonUrl": "https://worldpingdemo.grafana.net/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations",
+      "jsonpCallback": "",
+      "jsonpUrl": "https://worldpingdemo.grafana.net/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations",
+      "locationData": "json endpoint",
+      "mapCenter": "Europe",
+      "mapCenterLatitude": 46,
+      "mapCenterLongitude": 14,
+      "maxDataPoints": 1,
+      "mouseWheelZoom": true,
+      "pluginVersion": "7.5.7",
+      "showLegend": true,
+      "stickyLabels": true,
+      "tableQueryOptions": {
+        "geohashField": "geohash",
+        "labelField": "ES",
+        "latitudeField": "Latitude",
+        "longitudeField": "Longitude",
+        "metricField": "10",
+        "queryType": "coordinates"
+      },
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "",
+          "name": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "notificationA",
+          "type": "notification"
+        }
+      ],
+      "thresholds": "0,10",
+      "title": "Panel Title",
+      "type": "grafana-worldmap-panel",
+      "unitPlural": "",
+      "unitSingle": "",
+      "unitSingular": "",
+      "valueName": "total"
+    },
+    {
+      "datasource": "DeviceHive",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "UTC"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 19
+      },
+      "id": 8,
+      "maxDataPoints": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "targets": [
+        {
+          "converters": [],
+          "dataPath": "parameters.gps_data.UTC",
+          "name": "7owB9W6exKuJ0S4WMYs6ylqac5E4oeMUwPXo",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "target": "notificationA",
+          "type": "notification"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "UTC",
+      "type": "stat"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "device",
+  "uid": "_0pcOi3Gk",
+  "version": 5
+}
