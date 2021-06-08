@@ -1,0 +1,11 @@
+
+Está integrado con FSM 
+Tiene una función de inicialización que rellena una estructura
+Compruebo que estoy en el estado inicial cuando empiezo
+Si el estado es IDLE, hay fsm_fire llama a la función is_active() y me devuelve TRUE, cambio a ACTIVE y se actualiza el timeoutTEST_4: Si el estado es IDLE, hay fsm_fire llama a la función is_active() y me devuelve FALSE, me quedo en IDLE
+Hay una función is_active() que devuelve TRUE si el flag active está a 1, y FALSE en caso contrario
+Hay una función is_not_active() que devuelve TRUE si el flag active está a 0, y FALSE en caso contrario
+Si, estando en ACTIVE, el flag active es FALSE, se ejecuta la función led_off() y se resetea el timeout
+Si, estando en ACTIVE, el flag active es FALSE, se cambia al estado IDLE.
+Si, estando en ACTIVE, el flag active es TRUE, se sigue en el estado ACTIVE.
+Si, estando en ACTIVE, la función finish_timer() devuelve TRUE, se ejecuta la función blink_leds() y se actualiza el timeout

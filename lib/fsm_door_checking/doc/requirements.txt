@@ -1,0 +1,14 @@
++Esta integrado con FSM.
++Tiene funcion de inicializacion que rellena la estructura.
+
+Se puede registrar una funcion de guarda ¨is_active_and_door_open¨ que indica si ha ocurrido un evento.
+Una llamada a FMS_fire llama a la funcion is_active_and_door_open, si el estado es DISABLE.
+Si la funcion devuelve TRUE, se cambia al estado ENABLE.
+Si la funciion devuelve FALSE, sigue en el mismo estado, DISABLE.
+Una llamada a FSM_fire no llama a esta funcion si el estado es ENABLE.
+
+Se registra una fucnion de guarda ¨is_not_active_and_door_closed¨ que indica si ha ocurrido un evento
+Una llamada a FMS_fire llama a la funcion ¨is_not_active_and_door_closed¨, si el estado es ENABLE.
+Si la funcion devuelve TRUE, se cambia al estado DISABLE.
+Si la funciion devuelve FALSE, sigue en el mismo estado, ENABLE.
+Una llamada a FSM_fire no llama a esta funcion si el estado es DISABLE.
